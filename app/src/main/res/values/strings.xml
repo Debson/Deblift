@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Deblift</string>
+    <string name="title_profile">Profile</string>
+    <string name="title_history">History</string>
+    <string name="title_workout">Workout</string>
+    <string name="title_exercises">Exercises</string>
+    <string name="search_title">Search</string>
+    <string name="search_hint">Enter text to search</string>
+    <string name="menu_edit">Edit</string>
+    <string name="menu_duplicate">Duplicate</string>
+    <string name="menu_delete">Delete</string>
+
+</resources>
