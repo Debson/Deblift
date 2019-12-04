@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.deblift.R;
 
-public class WorkoutRecycleAdapter extends RecyclerView.Adapter {
+public class WorkoutAdapter extends RecyclerView.Adapter {
 
     Button button;
     PopupMenu popup;
@@ -38,7 +38,7 @@ public class WorkoutRecycleAdapter extends RecyclerView.Adapter {
         View root = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.activity_workouts_listview, parent, false);
 
-        return new TemplateSetRecycleAdapter.MyViewHolder(root);
+        return new MyViewHolder(root);
     }
 
     @Override

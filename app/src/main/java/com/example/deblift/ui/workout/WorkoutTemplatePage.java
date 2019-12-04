@@ -16,13 +16,12 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.deblift.R;
-import com.example.deblift.ui.exercises.ExercisesRecycleViewAdapter;
 
 public class WorkoutTemplatePage extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    private TemplateExerciseRecycleAdapter templateExerciseRecycleAdapter;
+    private TemplateExerciseAdapter templateExerciseAdapter;
     private Button addExerciseButton;
 
     @Override
@@ -43,8 +42,8 @@ public class WorkoutTemplatePage extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        templateExerciseRecycleAdapter = new TemplateExerciseRecycleAdapter();
-        recyclerView.setAdapter(templateExerciseRecycleAdapter);
+        templateExerciseAdapter = new TemplateExerciseAdapter();
+        recyclerView.setAdapter(templateExerciseAdapter);
 
 
         addExerciseButton = findViewById(R.id.add_exercise_button);
@@ -67,7 +66,7 @@ public class WorkoutTemplatePage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("Add exercise: ", " button pressed");
-                templateExerciseRecycleAdapter.addItem();
+                templateExerciseAdapter.addItem();
             }
         });
     }

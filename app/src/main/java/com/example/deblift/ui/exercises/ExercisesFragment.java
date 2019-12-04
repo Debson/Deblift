@@ -22,18 +22,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.deblift.R;
+import com.example.deblift.ui.history.HistoryItemPage;
+import com.example.deblift.ui.workout.RecyclerTouchListener;
 
 import java.util.ArrayList;
 
 
 public class ExercisesFragment extends Fragment {
 
-    ExercisesCustomAdapter adapter;
-
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
-    ExercisesRecycleViewAdapter exercisesRecycleViewAdapter;
-
+    ExercisesAdapter exercisesAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -57,16 +56,27 @@ public class ExercisesFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        exercisesRecycleViewAdapter = new ExercisesRecycleViewAdapter(exercises, muscleGroups, icons);
-        recyclerView.setAdapter(exercisesRecycleViewAdapter);
+        exercisesAdapter = new ExercisesAdapter(exercises, muscleGroups, icons);
+        recyclerView.setAdapter(exercisesAdapter);
 
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Log.d("Item clicked", Long.toString(position));
 
-        /*adapter = new ExercisesCustomAdapter(getContext(), exercises, muscleGroups, icons);
+                Intent intent = new Intent(getContext(), TestSlidingUpPanelPage.class);
+                //Intent intent = new Intent(getContext(), ExercisesItemPage.class);
+                //intent.putExtra("position", position);
+                //intent.putExtra("exercise_name", exercisesAdapter.getExerciseName(position));
+                startActivity(intent);
+            }
 
-        final ListView listView = root.findViewById(R.id.exercises_list);
-        setupListView(listView);
+            @Override
+            public void onLongClick(View view, int position) {
 
-        listView.setAdapter(adapter);*/
+            }
+        }));
+
 
         return root;
     }
@@ -82,7 +92,7 @@ public class ExercisesFragment extends Fragment {
         final SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String newText) {
-                adapter.filter(newText);
+                exercisesAdapter.filter(newText);
                 //Log.d("Msg: ", newText);
                 return true;
             }
@@ -98,19 +108,4 @@ public class ExercisesFragment extends Fragment {
         searchView.setOnQueryTextListener(queryTextListener);
     }
 
-
-    private void setupListView(ListView listView) {
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("Item clicked", Long.toString(id));
-
-                Intent intent = new Intent(getContext(), ExercisesItemPage.class);
-                intent.putExtra("position", position);
-                intent.putExtra("exercise_name", adapter.getExerciseName(position));
-                startActivity(intent);
-            }
-        });
-    }
 }

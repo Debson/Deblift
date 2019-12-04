@@ -8,35 +8,25 @@ import android.view.LayoutInflater;
 
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.deblift.R;
 
-import java.util.ArrayList;
-
 public class WorkoutFragment extends Fragment {
-
-    private WorkoutViewModel workoutViewModel;
-    private WorkoutsCustomAdapter adapter;
 
     private Button addTemplateButton;
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    private WorkoutRecycleAdapter workoutRecycleAdapter;
+    private WorkoutAdapter workoutAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        workoutViewModel =
-                ViewModelProviders.of(this).get(WorkoutViewModel.class);
         View root = inflater.inflate(R.layout.fragment_workouts, container, false);
 
         setHasOptionsMenu(true);
@@ -47,8 +37,8 @@ public class WorkoutFragment extends Fragment {
         layoutManager = new LinearLayoutManager(root.getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        workoutRecycleAdapter = new WorkoutRecycleAdapter();
-        recyclerView.setAdapter(workoutRecycleAdapter);
+        workoutAdapter = new WorkoutAdapter();
+        recyclerView.setAdapter(workoutAdapter);
 
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override

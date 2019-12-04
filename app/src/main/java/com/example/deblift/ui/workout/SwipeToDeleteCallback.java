@@ -21,12 +21,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
-    private TemplateSetRecycleAdapter templateSetRecycleAdapter;
+    private TemplateSetAdapter templateSetAdapter;
     private final ColorDrawable background;
 
-    public SwipeToDeleteCallback(TemplateSetRecycleAdapter adapter) {
+    public SwipeToDeleteCallback(TemplateSetAdapter adapter) {
         super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
-        templateSetRecycleAdapter = adapter;
+        templateSetAdapter = adapter;
         background = new ColorDrawable(Color.RED);
     }
 
@@ -38,7 +38,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
         int position = viewHolder.getAdapterPosition();
-        templateSetRecycleAdapter.removeItem(position);
+        templateSetAdapter.removeItem(position);
     }
 
     @Override

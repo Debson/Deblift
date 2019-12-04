@@ -1,128 +1,78 @@
 package com.example.deblift.ui.workout;
 
-import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 
-
-import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.deblift.R;
 
 import java.util.ArrayList;
+import com.example.deblift.utils.MyViewHolder;
 
-public class TemplateExerciseAdapter extends BaseAdapter {
+public class TemplateExerciseAdapter extends RecyclerView.Adapter {
 
-    private LayoutInflater inflater;
-    private Context context;
-    private ArrayList<TemplateSetAdapter> templateSetAdapterList = new ArrayList<>();
-    private TemplateSetAdapter templateSetAdapter;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private ArrayList<TemplateSetAdapter> adapterList = new ArrayList<>();
+
     private Button addSetButton;
-    private BaseAdapter adapter;
 
-    private RecyclerView setRecyclerView;
-    RecyclerView.LayoutManager layoutManager;
-    private ArrayList<TemplateSetRecycleAdapter> templateSetRecycleAdapterSet = new ArrayList<>();
+    private int itemCount = 2;
 
-
-    private int itemCount = 300;
-
-    public TemplateExerciseAdapter(Context applicationContext) {
-        this.context = applicationContext;
-        inflater = (LayoutInflater.from(applicationContext));
-
+    public TemplateExerciseAdapter() {
         for(int i = 0; i < itemCount; i++)
-            templateSetRecycleAdapterSet.add(new TemplateSetRecycleAdapter());
-
-        adapter = this;
+            adapterList.add(new TemplateSetAdapter());
     }
 
-
+    @NonNull
     @Override
-    public int getCount() {
-        return itemCount;
-    }
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View root = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.activity_workout_template_exercise_listview, parent, false);
 
-    @Override
-    public Object getItem(int position) {
-        return null;
+        return new MyViewHolder(root);
     }
 
     @Override
-    public long getItemId(int position) {
-        return 0;
-    }
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
-    @Override
-    public View getView(int position, View root, ViewGroup parent) {
-        root = inflater.inflate(R.layout.activity_workout_template_exercise_listview, null);
+        recyclerView = holder.itemView.findViewById(R.id.template_exercise_set_list);
+        recyclerView.setHasFixedSize(true);
 
-        setRecyclerView = root.findViewById(R.id.template_exercise_set_list);
-        setRecyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(holder.itemView.getContext());
+        recyclerView.setLayoutManager(layoutManager);
 
-        layoutManager = new LinearLayoutManager(context);
-        setRecyclerView.setLayoutManager(layoutManager);
+        RecyclerView.Adapter mAdapter = adapterList.get(position);
 
-        RecyclerView.Adapter mAdapter = templateSetRecycleAdapterSet.get(position);
+        //setupListView(recyclerView);
+        recyclerView.setAdapter(mAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(adapterList.get(position)));
+        itemTouchHelper.attachToRecyclerView(recyclerView);
 
-        //setupListView(setRecyclerView);
-        setRecyclerView.setAdapter(mAdapter);
-
-
-        /*int totalHeight = 0;
-
-        for (int i = 0; i < mAdapter.getCount(); i++) {
-            View mView = mAdapter.getView(i, null, setRecyclerView);
-
-            mView.measure(
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-
-            totalHeight += mView.getMeasuredHeight();
-            //Log.w("HEIGHT" + i, String.valueOf(totalHeight));
-        }
-        ViewGroup.LayoutParams params = setRecyclerView.getLayoutParams();
-        params.height = totalHeight + (setRecyclerView.getDividerHeight() * (mAdapter.getCount() - 1));
-        setRecyclerView.setLayoutParams(params);
-        setRecyclerView.requestLayout();*/
-
-
-        addSetButton = root.findViewById(R.id.add_set_button);
+        addSetButton = holder.itemView.findViewById(R.id.add_set_button);
         addSetButton.setTag(position);
         setupAddSetButton(addSetButton);
-
-
-        return root;
     }
 
-    private void setupListView(ListView listView) {
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("Exercise item clicked", Long.toString(position));
-
-            }
-        });
+    @Override
+    public int getItemCount() {
+        return itemCount;
     }
-
 
     private void setupAddSetButton(Button button) {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                templateSetAdapterList.get((Integer)v.getTag()).addItem((Integer)v.getTag());
-                adapter.notifyDataSetChanged();
+                adapterList.get((Integer)v.getTag()).addItem((Integer)v.getTag());
+                //adapter.notifyDataSetChanged();
 
                 Log.d("Add set: ", " button pressed " + v.getTag());
             }
@@ -131,7 +81,7 @@ public class TemplateExerciseAdapter extends BaseAdapter {
 
     public void addItem() {
         itemCount++;
-        templateSetAdapterList.add(new TemplateSetAdapter(context));
+        adapterList.add(new TemplateSetAdapter());
 
         notifyDataSetChanged();
     }

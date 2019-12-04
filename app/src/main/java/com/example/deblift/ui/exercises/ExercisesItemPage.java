@@ -19,7 +19,7 @@ public class ExercisesItemPage extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Intent intent = getIntent();
+        /*Intent intent = getIntent();
         String exerciseName = intent.getStringExtra("exercise_name");
 
         Log.d("ListViewUtem_Page name", exerciseName);
@@ -33,7 +33,7 @@ public class ExercisesItemPage extends AppCompatActivity {
                             "<li>First item</li>" +
                             "<li>Second item extension extension extension extension extension extension extension extension extension extension extension extension</li>"+
                             "<li>Third item</li></ol>";
-        exercise_description.loadDataWithBaseURL(null, htmlString, "text/html", "utf-8", null);
+        exercise_description.loadDataWithBaseURL(null, htmlString, "text/html", "utf-8", null);*/
     }
 
 

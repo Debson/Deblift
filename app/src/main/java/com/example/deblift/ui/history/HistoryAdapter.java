@@ -1,9 +1,8 @@
-package com.example.deblift.ui.workout;
+package com.example.deblift.ui.history;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,16 +10,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.deblift.R;
 import com.example.deblift.utils.MyViewHolder;
 
-public class TemplateSetAdapter extends RecyclerView.Adapter {
-
-    public int setCount = 3;
-
-
+public class HistoryAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View root = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.activity_workout_template_exercise_set_listview, parent, false);
+                .inflate(R.layout.activity_history_listview, parent, false);
 
         return new MyViewHolder(root);
     }
@@ -28,23 +23,10 @@ public class TemplateSetAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
-        final TextView setNum = holder.itemView.findViewById(R.id.set_number);
-        setNum.setText(Integer.toString(position + 1));
     }
 
     @Override
     public int getItemCount() {
-        return setCount;
-    }
-    public void addItem(int pos) {
-        setCount++;
-
-        notifyDataSetChanged();
-    }
-
-    public void removeItem(int pos) {
-        setCount--;
-
-        notifyDataSetChanged();
+        return 10;
     }
 }

@@ -15,7 +15,7 @@ import com.example.deblift.R;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class ExercisesRecycleViewAdapter extends RecyclerView.Adapter {
+public class ExercisesAdapter extends RecyclerView.Adapter {
 
     ArrayList<ExerciseItem> exerciseItems = new ArrayList<>();
     ArrayList<ExerciseItem> displayedExerciseItems;
@@ -27,7 +27,7 @@ public class ExercisesRecycleViewAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public ExercisesRecycleViewAdapter(ArrayList<String> exercisesList, ArrayList<String> muscleGroupList, ArrayList<Integer> exerciseIcon) {
+    public ExercisesAdapter(ArrayList<String> exercisesList, ArrayList<String> muscleGroupList, ArrayList<Integer> exerciseIcon) {
         for(int i = 0; i < exercisesList.size(); i++)
         {
             exerciseItems.add(new ExerciseItem(exercisesList.get(i), muscleGroupList.get(i), exerciseIcon.get(i)));
@@ -75,6 +75,10 @@ public class ExercisesRecycleViewAdapter extends RecyclerView.Adapter {
 
         Log.d("Msg: ", characterText);
         notifyDataSetChanged();
+    }
+
+    public String getExerciseName(int pos) {
+        return displayedExerciseItems.get(pos).exercise;
     }
 
     public void resetFilter()

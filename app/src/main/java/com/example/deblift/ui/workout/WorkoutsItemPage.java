@@ -1,6 +1,8 @@
 package com.example.deblift.ui.workout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ActionBar;
 import android.content.Intent;
@@ -17,7 +19,9 @@ import com.example.deblift.R;
 
 public class WorkoutsItemPage extends AppCompatActivity {
 
-    private WorkoutsItemCustomAdapter workoutsItemCustomAdapter;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private WorkoutItemAdapter workoutItemAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +33,27 @@ public class WorkoutsItemPage extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        workoutsItemCustomAdapter = new WorkoutsItemCustomAdapter(this);
+        recyclerView = findViewById(R.id.workouts_item_page_list);
+        recyclerView.setHasFixedSize(true);
 
-        final ListView itemPageListView = findViewById(R.id.workouts_item_page_list);
-        setupListView(itemPageListView);
-        itemPageListView.setAdapter(workoutsItemCustomAdapter);
+        layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
 
+        workoutItemAdapter = new WorkoutItemAdapter();
+        recyclerView.setAdapter(workoutItemAdapter);
 
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Log.d("Workout item clicked", Long.toString(position));
+                Log.d("Position ", Integer.toString(position));
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
     }
 
     @Override
@@ -53,14 +71,4 @@ public class WorkoutsItemPage extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void setupListView(ListView listView) {
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("Workout item clicked", Long.toString(position));
-
-            }
-        });
-    }
 }
