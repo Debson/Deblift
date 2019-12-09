@@ -19,12 +19,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
+public class SwipeToDeleteCallbackTemplate extends ItemTouchHelper.SimpleCallback {
 
     private TemplateSetAdapter templateSetAdapter;
     private final ColorDrawable background;
 
-    public SwipeToDeleteCallback(TemplateSetAdapter adapter) {
+    public SwipeToDeleteCallbackTemplate(TemplateSetAdapter adapter) {
         super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
         templateSetAdapter = adapter;
         background = new ColorDrawable(Color.RED);

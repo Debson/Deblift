@@ -9,14 +9,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.exercises.TestSlidingUpPanelPage"></activity>
+        <activity android:name=".ui.workout.AddExercisePage"></activity>
         <!-- use "adjustPan" to make EditText working inside ListView, otherwise won't get focus -->
         <activity
             android:name=".ui.workout.WorkoutTemplatePage"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".ui.history.HistoryItemPage" />
         <activity android:name=".ui.workout.WorkoutsItemPage" />
-        <activity android:name=".ui.exercises.ExercisesItemPage" />
+        <activity android:name=".ui.exercises.ExerciseItemPage" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">

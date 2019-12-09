@@ -2,9 +2,11 @@ package com.example.deblift.ui.workout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -23,6 +25,9 @@ public class TemplateExerciseAdapter extends RecyclerView.Adapter {
     private ArrayList<TemplateSetAdapter> adapterList = new ArrayList<>();
 
     private Button addSetButton;
+
+    private Button editExerciseButton;
+    private PopupMenu popup;
 
     private int itemCount = 2;
 
@@ -53,12 +58,17 @@ public class TemplateExerciseAdapter extends RecyclerView.Adapter {
 
         //setupListView(recyclerView);
         recyclerView.setAdapter(mAdapter);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(adapterList.get(position)));
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallbackTemplate(adapterList.get(position)));
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
         addSetButton = holder.itemView.findViewById(R.id.add_set_button);
         addSetButton.setTag(position);
         setupAddSetButton(addSetButton);
+
+        editExerciseButton = holder.itemView.findViewById(R.id.edit_exercise_button);
+        editExerciseButton.setTag(position);
+        setupEditExerciseButton(editExerciseButton, holder);
+
     }
 
     @Override
@@ -77,6 +87,35 @@ public class TemplateExerciseAdapter extends RecyclerView.Adapter {
                 Log.d("Add set: ", " button pressed " + v.getTag());
             }
         });
+    }
+
+    private void setupEditExerciseButton(Button button, final RecyclerView.ViewHolder holder)
+    {
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popup = new PopupMenu(holder.itemView.getContext(), v);
+                popup.getMenuInflater().inflate(R.menu.exercise_menu, popup.getMenu());
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+
+                        switch(item.getItemId()) {
+                            case R.id.exercise_menu_remove: {
+                                removeItem(0);
+                                break;
+                            }
+                        }
+
+                        return false;
+                    }
+                });
+
+                popup.show();
+            }
+        });
+
     }
 
     public void addItem() {

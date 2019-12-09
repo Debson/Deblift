@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
             android:alpha="128"
-            android:text="Exercise"
+            android:text="@string/exercise"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
             android:alpha="128"
-            android:text="Muscle Group" />
+            android:text="@string/muscle_group" />
     </LinearLayout>
 
 </LinearLayout>

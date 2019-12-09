@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".ui.workout.WorkoutTemplatePage">
+    tools:context=".ui.workout.WorkoutTemplatePage"
+    android:noHistory="true">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -21,19 +22,22 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/textView"
+                <EditText
+                    android:id="@+id/workout_name_edit_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:text="New workout template" />
+                    android:text="Midnight Workout"
+                    android:inputType="textMultiLine"
+                    android:maxLines="20"/>
 
                 <Button
-                    android:id="@+id/edit_workout_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:text="Button" />
+                    android:id="@+id/edit_workout_name_button"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="5dp"
+                    android:foreground="@drawable/ic_menu_black_24dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center" />
 
             </LinearLayout>
 
@@ -45,9 +49,11 @@
 
             <Button
                 android:id="@+id/add_exercise_button"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="ADD EXERCISE" />
+                android:background="@android:color/transparent"
+                android:foreground="?attr/selectableItemBackground"
+                android:text="add exercise" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

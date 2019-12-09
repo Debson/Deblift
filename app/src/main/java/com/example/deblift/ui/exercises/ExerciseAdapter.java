@@ -15,10 +15,12 @@ import com.example.deblift.R;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class ExercisesAdapter extends RecyclerView.Adapter {
+public class ExerciseAdapter extends RecyclerView.Adapter {
 
-    ArrayList<ExerciseItem> exerciseItems = new ArrayList<>();
-    ArrayList<ExerciseItem> displayedExerciseItems;
+    private ArrayList<ExerciseItem> exerciseItems = new ArrayList<>();
+    private ArrayList<ExerciseItem> displayedExerciseItems;
+
+    private ExerciseFragment exercisesFragment;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
@@ -27,7 +29,8 @@ public class ExercisesAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public ExercisesAdapter(ArrayList<String> exercisesList, ArrayList<String> muscleGroupList, ArrayList<Integer> exerciseIcon) {
+    public ExerciseAdapter(ExerciseFragment exercisesFragment, ArrayList<String> exercisesList, ArrayList<String> muscleGroupList, ArrayList<Integer> exerciseIcon) {
+        this.exercisesFragment = exercisesFragment;
         for(int i = 0; i < exercisesList.size(); i++)
         {
             exerciseItems.add(new ExerciseItem(exercisesList.get(i), muscleGroupList.get(i), exerciseIcon.get(i)));
@@ -47,6 +50,13 @@ public class ExercisesAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exercisesFragment.goToExerciseItemPage();
+            }
+        });
 
         TextView exerciseText = holder.itemView.findViewById(R.id.exerciseNameText);
         TextView muscleGroupText = holder.itemView.findViewById(R.id.bodyPartText);

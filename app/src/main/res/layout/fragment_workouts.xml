@@ -26,15 +26,21 @@
                     android:id="@+id/workouts_quickstart_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-smallcaps"
                     android:paddingStart="5dp"
                     android:paddingEnd="5dp"
-                    android:text="QUICK START" />
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/quick_start"
+                    android:textSize="14sp" />
 
                 <Button
                     android:id="@+id/workouts_start_empty_workout_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Start an empty workout" />
+                    android:text="@string/start_empty_workout"
+                    android:background="@android:color/holo_blue_light"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:layout_marginBottom="5dp"/>
 
                 <TableLayout
                     android:layout_width="match_parent"
@@ -42,26 +48,27 @@
 
                     <TableRow
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="10dp">
 
                         <TextView
                             android:id="@+id/workouts_routines_text"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:fontFamily="sans-serif-smallcaps"
                             android:gravity="left"
                             android:paddingStart="5dp"
-                            android:text="MY ROUTINES" />
+                            android:text="@string/my_routines"
+                            android:textSize="14sp" />
 
                         <Button
                             android:id="@+id/workout_add_button"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_gravity="right"
-                            android:layout_weight="0"
-                            android:background="@android:drawable/ic_menu_add"
-                            android:foreground="?android:attr/selectableItemBackground"
-                            android:gravity="right" />
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_gravity="bottom|right"
+                            android:foreground="@drawable/ic_plus_black_24dp"
+                            android:background="?android:attr/selectableItemBackgroundBorderless" />
                     </TableRow>
 
                 </TableLayout>
@@ -73,22 +80,6 @@
                 </androidx.recyclerview.widget.RecyclerView>
 
             </LinearLayout>
-
-            <!--
-        <ListView
-            android:id="@+id/workouts_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
-            -->
 
         </LinearLayout>
 

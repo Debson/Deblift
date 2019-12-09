@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
                 android:gravity="center"
-                android:text="-" />
+                android:text="@string/empty_divider" />
 
             <RelativeLayout
                 android:layout_width="0dp"
@@ -45,7 +45,7 @@
                     android:digits="0123456789."
                     android:ems="10"
                     android:gravity="center"
-                    android:inputType="numberDecimal" />
+                    android:inputType="numberDecimal"/>
             </RelativeLayout>
 
             <RelativeLayout

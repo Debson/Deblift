@@ -2,15 +2,11 @@ package com.example.deblift.ui.exercises;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.SearchView;
 
 
@@ -22,17 +18,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.deblift.R;
-import com.example.deblift.ui.history.HistoryItemPage;
-import com.example.deblift.ui.workout.RecyclerTouchListener;
 
 import java.util.ArrayList;
 
 
-public class ExercisesFragment extends Fragment {
+public class ExerciseFragment extends Fragment {
 
-    RecyclerView recyclerView;
-    RecyclerView.LayoutManager layoutManager;
-    ExercisesAdapter exercisesAdapter;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private ExerciseAdapter exercisesAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -56,26 +50,8 @@ public class ExercisesFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        exercisesAdapter = new ExercisesAdapter(exercises, muscleGroups, icons);
+        exercisesAdapter = new ExerciseAdapter(this, exercises, muscleGroups, icons);
         recyclerView.setAdapter(exercisesAdapter);
-
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                Log.d("Item clicked", Long.toString(position));
-
-                Intent intent = new Intent(getContext(), TestSlidingUpPanelPage.class);
-                //Intent intent = new Intent(getContext(), ExercisesItemPage.class);
-                //intent.putExtra("position", position);
-                //intent.putExtra("exercise_name", exercisesAdapter.getExerciseName(position));
-                startActivity(intent);
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
-        }));
 
 
         return root;
@@ -85,8 +61,6 @@ public class ExercisesFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.top_nav_search, menu);
-
-        MenuItem item = menu.findItem(R.id.menu_search);
 
         final SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
         final SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
@@ -108,4 +82,11 @@ public class ExercisesFragment extends Fragment {
         searchView.setOnQueryTextListener(queryTextListener);
     }
 
+    public void goToExerciseItemPage() {
+        Intent intent = new Intent(getContext(), ExerciseItemPage.class);
+        //Intent intent = new Intent(getContext(), ExerciseItemPage.class);
+        //intent.putExtra("position", position);
+        //intent.putExtra("exercise_name", exercisesAdapter.getExerciseName(position));
+        startActivity(intent);
+    }
 }

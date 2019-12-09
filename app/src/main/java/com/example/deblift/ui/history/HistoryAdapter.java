@@ -11,6 +11,13 @@ import com.example.deblift.R;
 import com.example.deblift.utils.MyViewHolder;
 
 public class HistoryAdapter extends RecyclerView.Adapter {
+
+    private HistoryFragment historyFragment;
+
+    public HistoryAdapter(HistoryFragment historyFragment) {
+        this.historyFragment = historyFragment;
+    }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -20,13 +27,20 @@ public class HistoryAdapter extends RecyclerView.Adapter {
         return new MyViewHolder(root);
     }
 
+
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
+        holder.itemView.setOnClickListener(new RecyclerView.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                historyFragment.goToHistoryItemPage();
+            }
+        });
 
     }
 
     @Override
     public int getItemCount() {
-        return 10;
+        return 2;
     }
 }

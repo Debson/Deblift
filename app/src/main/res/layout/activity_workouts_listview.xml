@@ -3,60 +3,79 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:descendantFocusability="blocksDescendants"
     android:orientation="vertical"
-    android:background="?attr/selectableItemBackground"
     android:clickable="true">
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:alpha="255"
-        android:background="@drawable/border"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="15dp">
+        android:background="?attr/selectableItemBackground">
 
-        <TextView
-            android:id="@+id/workout_nameText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Workout A1"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/workout_moreButton"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_gravity="right"
-            android:layout_marginTop="-20dp"
-            android:background="@drawable/ic_menu_black_24dp"
-            android:foreground="?android:attr/selectableItemBackground" />
-
-        <TextView
-            android:id="@+id/workout_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
-            android:text="Last performed: 19 Sep 2019"
-            android:textSize="12sp" />
-
-        <Space
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="10dp" />
-
-        <TextView
-            android:id="@+id/workout_exercises"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1 x Strict Military Press\n2 x Arnold Press\n2 x Incline Bemcj Press\n3 x Chest Fly\n3 x Hammer Curl\n3 x Lateral Raise"
-            android:textSize="12sp" />
+            android:alpha="255"
+            android:background="@drawable/border"
+            android:orientation="vertical"
+            android:padding="15dp">
 
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <TextView
+                        android:id="@+id/workout_nameText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:text="Workout A1"
+                        android:textSize="@dimen/workout_name_text"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/workout_moreButton"
+                        android:layout_width="@dimen/workout_item_options_button"
+                        android:layout_height="@dimen/workout_item_options_button"
+                        android:layout_gravity="bottom|right"
+                        android:layout_weight="0"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:foreground="@drawable/ic_menu_black_24dp" />
+                </TableRow>
+
+            </TableLayout>
+
+            <TextView
+                android:id="@+id/workout_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:text="Last performed: 19 Sep 2019"
+                android:textSize="@dimen/workout_date" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <TextView
+                android:id="@+id/workout_exercises"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1 x Strict Military Press\n2 x Arnold Press\n2 x Incline Bemcj Press\n3 x Chest Fly\n3 x Hammer Curl\n3 x Lateral Raise"
+                android:textSize="@dimen/workout_exercise_entry_name" />
+
+        </LinearLayout>
     </LinearLayout>
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="5dp" />
+        android:layout_height="10dp" />
 
 </LinearLayout>

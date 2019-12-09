@@ -10,7 +10,7 @@ import android.webkit.WebView;
 import com.example.deblift.R;
 
 
-public class ExercisesItemPage extends AppCompatActivity {
+public class ExerciseItemPage extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

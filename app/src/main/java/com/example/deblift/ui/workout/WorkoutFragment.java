@@ -9,21 +9,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.deblift.MainActivity;
 import com.example.deblift.R;
+import com.example.deblift.SlidingPanelManager;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 public class WorkoutFragment extends Fragment {
-
-    private Button addTemplateButton;
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private WorkoutAdapter workoutAdapter;
+    private TextView workoutNameTV;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -37,24 +41,18 @@ public class WorkoutFragment extends Fragment {
         layoutManager = new LinearLayoutManager(root.getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        workoutAdapter = new WorkoutAdapter();
+        workoutAdapter = new WorkoutAdapter(this);
         recyclerView.setAdapter(workoutAdapter);
 
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                goToWorkoutPage();
-                Log.d("Position ", Integer.toString(position));
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
-        }));
-
+        final LayoutInflater factory = getLayoutInflater();
+        final View workoutItemLayout = factory.inflate(R.layout.activity_workouts_listview, null);
+        workoutNameTV = (TextView) workoutItemLayout.findViewById(R.id.workout_nameText);
 
         setupAddTemplateButton(root);
+
+        setupStartEmptyWorkoutButton(root);
+
+
 
         return root;
     }
@@ -62,14 +60,15 @@ public class WorkoutFragment extends Fragment {
 
     public void goToWorkoutPage() {
         Intent intent = new Intent(getContext(), WorkoutsItemPage.class);
-        //intent.putExtra("position", position);
+
+        intent.putExtra("workout_name", workoutNameTV.getText());
         //intent.putExtra("exercise_name", adapter.getExerciseName(position));
         startActivity(intent);
     }
 
     private void setupAddTemplateButton(View root)
     {
-        addTemplateButton = root.findViewById(R.id.workout_add_button);
+        Button addTemplateButton = root.findViewById(R.id.workout_add_button);
 
         addTemplateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,5 +80,27 @@ public class WorkoutFragment extends Fragment {
             }
         });
 
+    }
+
+    private void setupStartEmptyWorkoutButton(View root)
+    {
+        if(!SlidingPanelManager.IsSlidingPanelActive()) {
+
+            Button startEmptyWorkoutButton = root.findViewById(R.id.workouts_start_empty_workout_button);
+
+            startEmptyWorkoutButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), MainActivity.class);
+                    intent.putExtra("panel_enabled", true);
+                    intent.putExtra("workout_template", true);
+                    //intent.putExtra("exercise_name", adapter.getExerciseName(position));
+                    startActivity(intent);
+                }
+            });
+        }
+        else {
+            // Display dialog to discard current workout and star new
+        }
     }
 }
