@@ -11,6 +11,7 @@ import com.deblift.ui.history.WorkoutExercise;
 import com.deblift.ui.history.WorkoutTypeConverter;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(tableName = "workouts")
@@ -75,6 +76,14 @@ public class WorkoutEntity {
         this.workoutName = workoutName;
         this.workoutType = workoutType;
         this.workoutExercise = workoutExercise;
+    }
+
+    @Ignore
+    public WorkoutEntity(String workoutName,
+                         int workoutType) {
+        this.workoutName = workoutName;
+        this.workoutType = workoutType;
+        this.workoutExercisesList = new ArrayList<>();
     }
 
     public String getWorkoutName() {

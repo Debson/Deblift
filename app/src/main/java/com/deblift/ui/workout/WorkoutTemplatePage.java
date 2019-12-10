@@ -6,7 +6,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,7 +16,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +26,7 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.deblift.MainActivity;
 import com.deblift.R;
 import com.deblift.database.AppRoomDatabase;
 import com.deblift.ui.exercises.Exercise;
@@ -43,6 +48,8 @@ public class WorkoutTemplatePage extends AppCompatActivity {
     private EditText workoutNameEditText;
 
     public final int SUBACTIVITY_CODE = 1;
+    private boolean editWorkout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,21 +57,37 @@ public class WorkoutTemplatePage extends AppCompatActivity {
         setContentView(R.layout.activity_workout_template_page);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_exit_black_24dp);
 
-        setTitle("New workout template");
-
-        Intent intent = getIntent();
 
         recyclerView = findViewById(R.id.template_exercise_list);
 
-        recyclerView.setHasFixedSize(false);
         recyclerView.setClipToPadding(true);
 
         layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        templateExerciseAdapter = new TemplateExerciseAdapter(this);
+        WorkoutEntity workoutEntity = null;
+
+        Intent intent = getIntent();
+
+        editWorkout = intent.getBooleanExtra("edit_workout", false);
+        if(editWorkout) {
+            int workoutId = intent.getIntExtra("workout_id", 0);
+            AppRoomDatabase appDb = AppRoomDatabase.getInstance(this);
+            workoutEntity = appDb.workoutDao().loadWorkout(workoutId);
+
+        }else {
+
+            workoutEntity = new WorkoutEntity(
+                    MainActivity.resoruces.getString(R.string.empty_workout),
+                    WorkoutEntity.WORKOUT_HISTORY);
+
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_black_24dp);
+        }
+
+        setTitle(workoutEntity.getWorkoutName());
+
+        templateExerciseAdapter = new TemplateExerciseAdapter(workoutEntity);
         recyclerView.setAdapter(templateExerciseAdapter);
 
 
@@ -141,7 +164,10 @@ public class WorkoutTemplatePage extends AppCompatActivity {
 
                     for (String exName : exerciseNamesArray) {
                         Exercise ex = appDb.exercisesDao().loadExercise(exName);
-                        templateExerciseAdapter.addItem(ex);
+
+                        WorkoutExercise we = new WorkoutExercise(ex.getExerciseName());
+
+                        templateExerciseAdapter.addItem(we);
                     }
                 }
 
@@ -170,6 +196,27 @@ public class WorkoutTemplatePage extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    // Override dispatch touch event so all the EditText will lose focus on outside click
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if ( v instanceof EditText) {
+                Rect outRect = new Rect();
+                v.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int)ev.getRawX(), (int)ev.getRawY())) {
+                    v.clearFocus();
+
+                    // Hide keyboard
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+            }
+        }
+
+        return super.dispatchTouchEvent(ev);
+    }
+
     @Override
     public void onBackPressed() {
         finish();
@@ -185,7 +232,7 @@ public class WorkoutTemplatePage extends AppCompatActivity {
             case R.id.menu_save: {
                 // Save workout
 
-                if(templateExerciseAdapter.getExerciseList().isEmpty())
+                if(templateExerciseAdapter.getWorkoutEntity().workoutExercisesList.isEmpty())
                 {
                     // Cancel toast if already displayed(prevent stacking Toast alerts when user spams a button)
                     if(toast != null)
@@ -201,27 +248,16 @@ public class WorkoutTemplatePage extends AppCompatActivity {
                     return false;
                 }
 
-                templateExerciseAdapter.saveSets();
-
-                long currentTimeMilis = System.currentTimeMillis();
-                WorkoutEntity workoutEntity = new WorkoutEntity(
-                        workoutNameEditText.getText().toString(),
-                        WorkoutEntity.WORKOUT_TEMPLATE,
-                        currentTimeMilis,
-                        templateExerciseAdapter.getExerciseList().size());
-
-                List<WorkoutExercise> workoutExerciseList = new ArrayList<>();
-                for(int i = 0; i < templateExerciseAdapter.getExerciseList().size(); i++) {
-                    workoutExerciseList.add(new WorkoutExercise(templateExerciseAdapter.getExerciseList().get(i).getExerciseName(), templateExerciseAdapter.getSets().get(i)));
-                }
-
-                workoutEntity.setWorkoutExercises(workoutExerciseList);
-
                 AppRoomDatabase appDb = AppRoomDatabase.getInstance(this);
 
-                appDb.workoutTemplateDao().insertWorkout(workoutEntity);
+                templateExerciseAdapter.getWorkoutEntity().setWorkoutType(WorkoutEntity.WORKOUT_TEMPLATE);
 
-                // Create workout entry into a workout table...
+                if(editWorkout)
+                    appDb.workoutDao().updateWorkout(templateExerciseAdapter.getWorkoutEntity());
+                else
+                    appDb.workoutDao().insertWorkout(templateExerciseAdapter.getWorkoutEntity());
+
+                templateExerciseAdapter.notifyDataSetChanged();
 
                 setResult(Activity.RESULT_OK);
                 finish();

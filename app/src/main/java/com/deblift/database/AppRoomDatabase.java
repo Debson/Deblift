@@ -1,7 +1,14 @@
+/*
+ * Date: 10/12/2019
+ * Name: Michal Debski
+ * Class: DT211C
+ * Description:
+ *
+ */
+
 package com.deblift.database;
 
 import android.content.Context;
-import android.content.res.Resources;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -15,11 +22,11 @@ import com.deblift.MainActivity;
 import com.deblift.R;
 import com.deblift.ui.exercises.Exercise;
 import com.deblift.ui.exercises.ExerciseDao;
+import com.deblift.ui.workout.WorkoutDao;
 import com.deblift.ui.workout.WorkoutEntity;
-import com.deblift.ui.workout.WorkoutTemplateDao;
 
 
-@Database(entities = {Exercise.class, WorkoutEntity.class}, exportSchema = false, version = 8)
+@Database(entities = {Exercise.class, WorkoutEntity.class}, exportSchema = false, version = 9)
 public abstract class AppRoomDatabase extends RoomDatabase {
     private static final String DB_NAME = MainActivity.resoruces.getString(R.string.database_name);
     private static AppRoomDatabase instance;
@@ -37,7 +44,7 @@ public abstract class AppRoomDatabase extends RoomDatabase {
 
     public abstract ExerciseDao exercisesDao();
 
-    public abstract WorkoutTemplateDao workoutTemplateDao();
+    public abstract WorkoutDao workoutDao();
 
     @NonNull
     @Override

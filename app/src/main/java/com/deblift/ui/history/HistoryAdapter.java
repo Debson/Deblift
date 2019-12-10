@@ -3,6 +3,7 @@ package com.deblift.ui.history;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,8 @@ import com.deblift.ui.workout.WorkoutEntity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHolder> {
 
@@ -31,6 +34,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
         public TextView workoutExercises;
         public TextView workoutBestSets;
 
+        public ImageView workoutTimeImg;
+        public ImageView workoutVolumeImg;
+
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             workoutName = itemView.findViewById(R.id.history_workout_nameText);
@@ -39,6 +45,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
             workoutVolume = itemView.findViewById(R.id.history_volume_text);
             workoutExercises = itemView.findViewById(R.id.history_workout_exercises);
             workoutBestSets = itemView.findViewById(R.id.history_workout_sets_text);
+            workoutTimeImg = itemView.findViewById(R.id.history_time_icon);
+            workoutVolumeImg = itemView.findViewById(R.id.history_volume_icon);
         }
     }
 
@@ -74,12 +82,19 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
         String exercisesStr = prepareWorkoutExercisesString(position);
         holder.workoutExercises.setText(exercisesStr);
 
+        String bestSets = prepareBestSetsString(position);
+        holder.workoutBestSets.setText(bestSets);
+
+        holder.workoutTimeImg.setImageResource(R.drawable.ic_deblift_small);
+        holder.workoutVolumeImg.setImageResource(R.drawable.ic_deblift_small);
 
 
         holder.itemView.setOnClickListener(new RecyclerView.OnClickListener() {
             @Override
             public void onClick(View v) {
-                historyFragment.goToHistoryItemPage();
+
+                // HAD NO TIME TO IMPLEMENT THAT
+                //historyFragment.goToHistoryItemPage();
             }
         });
     }
@@ -92,11 +107,17 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
 
     private String prepareWorkoutLengthString(int position) {
         String str = "";
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(workouts[position].getWorkoutDate());
+        long workoutTimeMillis = workouts[position].getWorkoutDuration();
 
-        str += new SimpleDateFormat("H").format(calendar.getTime()) + "h ";
-        str += new SimpleDateFormat("M").format(calendar.getTime()) + "m";
+        long hours = TimeUnit.MILLISECONDS.toHours(workoutTimeMillis);
+        workoutTimeMillis -= TimeUnit.HOURS.toMillis(hours);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(workoutTimeMillis);
+        workoutTimeMillis -= TimeUnit.MINUTES.toMillis(minutes);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(workoutTimeMillis);
+
+        str = hours > 0 ? (hours + "h ") : "";
+        str += minutes > 0 ? (minutes + "m ") : "";
+        str += seconds + "s";
 
         return str;
     }
@@ -117,21 +138,41 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
     private String prepareWorkoutExercisesString(int position) {
         String str = "";
         for(WorkoutExercise w : workouts[position].workoutExercisesList) {
-            str += w.getSetCount() + " x ";
-            str += w.getExercise();
-            str += '\n';
+            if(w.getSets().size() > 0) {
+                str += w.getSets().size() + " x ";
+                str += w.getExercise();
+                str += '\n';
+            }
         }
 
         return str;
     }
 
+    private String prepareBestSetsString(int position) {
+        String str = "";
+        for(WorkoutExercise w : workouts[position].workoutExercisesList) {
+            float max = 0;
+            String exMax = "";
+            for(Set s : w.getSets()) {
+                float vol = (float)s.getReps() * s.getWeight();
+                if(vol >= max) {
+                    max = vol;
+                    exMax = s.getWeight() + MainActivity.resoruces.getString(R.string.weight_unit) + " x " + s.getReps() + '\n';
+                }
+            }
+            str += exMax;
+        }
+
+        return str;
+
+    }
+
     private String prepareWorkoutDateString(int position) {
         String str = "";
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(workouts[position].getWorkoutDate());
-
-        str = new SimpleDateFormat("d MMM yyyy  HH:MM").format(calendar.getTime());
+        Date date = new Date();
+        date.setTime(workouts[position].getWorkoutDate());
+        str = new SimpleDateFormat("d MMM yyyy  HH:MM").format(date);
 
         return str;
     }

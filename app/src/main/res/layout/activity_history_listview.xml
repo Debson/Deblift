@@ -38,7 +38,6 @@
                 android:id="@+id/history_workout_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="-5dp"
                 android:layout_marginBottom="5dp"
                 android:text="19 Sep 2019"
                 android:textSize="12sp" />
@@ -63,7 +62,7 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:layout_marginEnd="10dp"
-                            android:background="#E91E63"
+                            android:adjustViewBounds="true"
                             tools:srcCompat="@tools:sample/avatars[2]" />
 
                         <TextView
@@ -85,7 +84,7 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:layout_marginEnd="10dp"
-                            android:background="#3F51B5"
+                            android:adjustViewBounds="true"
                             tools:srcCompat="@tools:sample/avatars[0]" />
 
                         <TextView

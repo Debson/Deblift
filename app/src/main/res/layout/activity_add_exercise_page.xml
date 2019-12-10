@@ -23,6 +23,7 @@
                 android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:text="@string/add_exercise"
                 android:textSize="24sp" />
 
@@ -40,13 +41,14 @@
             android:id="@+id/submit_exercises_fab"
             android:layout_width="56dp"
             android:layout_height="56dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
             android:layout_gravity="bottom|end"
-            android:contentDescription="submit"
-            android:clickable="true"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="20dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"/>
+            android:clickable="true"
+            android:contentDescription="submit"
+            android:src="@drawable/ic_check_black_24dp" />
 
     </RelativeLayout>
 

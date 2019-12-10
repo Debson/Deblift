@@ -1,5 +1,6 @@
 package com.deblift.ui.workout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,9 +11,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
 
+import com.deblift.MainActivity;
 import com.deblift.R;
 import com.deblift.database.AppRoomDatabase;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -34,16 +37,9 @@ public class AddExercisePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_exercise_page);
 
-        getSupportActionBar().setTitle("Add exercise");
-
-        ArrayList<String> exercises = new ArrayList<>();
-        ArrayList<String> muscleGroups = new ArrayList<>();
-        ArrayList<Integer> icons = new ArrayList<>();
-        for(int i = 0; i < 100; i++) {
-            exercises.add("Exercise " + i);
-            muscleGroups.add("Legs");
-            icons.add(R.drawable.ic_dumbbell_black_24dp);
-        }
+        getSupportActionBar().setTitle(MainActivity.resoruces.getString(R.string.add_exercise));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_black_24dp);
 
         recyclerView = findViewById(R.id.exercises_list);
         recyclerView.setHasFixedSize(true);
@@ -61,7 +57,7 @@ public class AddExercisePage extends AppCompatActivity {
         submitExercisesFAB = findViewById(R.id.submit_exercises_fab);
         submitExercisesFAB.hide();
 
-
+        submitExercisesFAB.setBackgroundResource(R.drawable.ic_check_black_24dp);
         submitExercisesFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,14 +74,27 @@ public class AddExercisePage extends AppCompatActivity {
                 setResult(Activity.RESULT_OK, intent);
 
                 finish();
-
             }
         });
 
     }
 
     @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                onBackPressed();
+                return true;
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
+
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.top_nav_search, menu);
 
@@ -110,6 +119,10 @@ public class AddExercisePage extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
 
     public void updateSelectedItems(ArrayList<Integer> selectedItems) {
 

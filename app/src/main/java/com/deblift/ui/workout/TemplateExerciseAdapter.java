@@ -19,46 +19,44 @@ import com.deblift.R;
 import java.util.ArrayList;
 
 import com.deblift.ui.exercises.Exercise;
+import com.deblift.ui.history.WorkoutExercise;
 
 public class TemplateExerciseAdapter extends RecyclerView.Adapter<TemplateExerciseAdapter.MyViewHolder> {
 
-    private static ArrayList<TemplateSetAdapter> adapterList = new ArrayList<>();
-    private ArrayList<Exercise> exercises = new ArrayList<>();
-    private ArrayList<Integer> sets = new ArrayList<>();
+    private WorkoutEntity workoutEntity;
 
     private PopupMenu popup;
 
-    private int itemCount = 0;
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        RecyclerView recyclerView;
+
+        private RecyclerView recyclerView;
+        private TextView exerciseName;
         private Button addSetButton;
         private Button editExerciseButton;
         private ItemTouchHelper itemTouchHelper;
-        TemplateSetAdapter templateSetAdapter;
+        private TemplateSetAdapter templateSetAdapter;
 
         public MyViewHolder(View itemView)
         {
             super(itemView);
+            exerciseName = itemView.findViewById(R.id.exercise_name_text);
             recyclerView = (RecyclerView) itemView.findViewById(R.id.template_exercise_set_list);
-            recyclerView.setHasFixedSize(true);
-            recyclerView.setItemViewCacheSize(20);
             addSetButton = itemView.findViewById(R.id.add_set_button);
             editExerciseButton = itemView.findViewById(R.id.edit_exercise_button);
             templateSetAdapter = new TemplateSetAdapter();
-            adapterList.add(templateSetAdapter);
 
             recyclerView.setAdapter(templateSetAdapter);
             itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallbackTemplate(templateSetAdapter));
             itemTouchHelper.attachToRecyclerView(recyclerView);
 
-
+            recyclerView.setItemViewCacheSize(Integer.MAX_VALUE);
             recyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
         }
     }
 
-    public TemplateExerciseAdapter(Context context) {
-
+    public TemplateExerciseAdapter(WorkoutEntity workoutEntity) {
+        this.workoutEntity = workoutEntity;
     }
 
     @NonNull
@@ -74,28 +72,18 @@ public class TemplateExerciseAdapter extends RecyclerView.Adapter<TemplateExerci
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
 
-        TextView exerciseName = holder.itemView.findViewById(R.id.exercise_name_text);
-        exerciseName.setText(exercises.get(position).getExerciseName());
+        holder.exerciseName.setText(workoutEntity.workoutExercisesList.get(position).getExercise());
 
-        // Setup sets recycler view and adapter
-
-        /*RecyclerView recyclerView = holder.itemView.findViewById(R.id.template_exercise_set_list);
-
-        layoutManager = new LinearLayoutManager(holder.itemView.getContext());
-        recyclerView.setLayoutManager(layoutManager);
+        holder.templateSetAdapter.setParentIndex(position);
+        holder.templateSetAdapter.setSets(workoutEntity.workoutExercisesList.get(position).getSets());
 
 
-        recyclerView.setAdapter(adapterList.get(position));
-        adapterList.get(position).attachTouchHelperToRecyclerView(recyclerView);*/
-
-        sets.add(position, holder.templateSetAdapter.getItemCount());
-
-
+        // Handle buttons
         holder.addSetButton.setTag(position);
         holder.addSetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.templateSetAdapter.addItem(position);
+                holder.templateSetAdapter.addItem();
             }
         });
 
@@ -111,7 +99,8 @@ public class TemplateExerciseAdapter extends RecyclerView.Adapter<TemplateExerci
 
                         switch(item.getItemId()) {
                             case R.id.exercise_menu_remove: {
-                                removeItem(position);
+                                removeItem(holder.getAdapterPosition());
+
                                 break;
                             }
                         }
@@ -125,39 +114,29 @@ public class TemplateExerciseAdapter extends RecyclerView.Adapter<TemplateExerci
             }
         });
 
-
     }
 
     @Override
     public int getItemCount() {
-        return exercises.size();
+        return workoutEntity.workoutExercisesList.size();
     }
 
-    public void saveSets() {
-        sets.clear();
-        for(int i = 0; i < adapterList.size(); i++)
-            sets.add(i, adapterList.get(i).getItemCount());
-    }
 
-    public void addItem(Exercise exercise) {
-        exercises.add(exercise);
-        notifyItemInserted(exercises.size() + 1);
+    public void addItem(WorkoutExercise workoutExercise) {
+        workoutEntity.workoutExercisesList.add(workoutExercise);
+
+        notifyDataSetChanged();
+        notifyItemInserted(workoutEntity.workoutExercisesList.size() - 1);
     }
 
     public void removeItem(int pos) {
-        exercises.remove(pos);
+        workoutEntity.workoutExercisesList.remove(pos);
+
         notifyItemRemoved(pos);
     }
 
-    public ArrayList<TemplateSetAdapter> getAdapterList() {
-        return adapterList;
-    }
 
-    public ArrayList<Exercise> getExerciseList() {
-        return exercises;
-    }
-
-    public ArrayList<Integer> getSets() {
-        return sets;
+    public WorkoutEntity getWorkoutEntity() {
+        return workoutEntity;
     }
 }

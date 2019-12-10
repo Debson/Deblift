@@ -9,15 +9,19 @@
 
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.8"
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/icon"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:id="@+id/exercise_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
             android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:src="@drawable/ic_launcher_background"
             app:srcCompat="@drawable/ic_launcher_background" />
 
@@ -25,12 +29,13 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="0.11"
         android:gravity="center"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/exerciseNameText"
+            android:id="@+id/exercise_name_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
@@ -40,7 +45,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/bodyPartText"
+            android:id="@+id/muscle_group_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"

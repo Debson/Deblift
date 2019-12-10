@@ -1,5 +1,6 @@
 package com.deblift;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,17 +14,16 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.navigation.NavController;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.deblift.database.AppRoomDatabase;
-import com.deblift.ui.exercises.Exercise;
 import com.deblift.ui.history.WorkoutExercise;
 import com.deblift.ui.workout.AddExercisePage;
 import com.deblift.ui.workout.Set;
 import com.deblift.ui.workout.SlidingExerciseAdapter;
-import com.deblift.ui.workout.SlidingSetAdapter;
 import com.deblift.ui.workout.WorkoutEntity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -45,6 +45,7 @@ public class SlidingPanelManager {
     private NavController navController;
     private BottomNavigationView navView;
 
+    private TextView workoutTitle;
     private TextView workoutTimer;
     private TextView workoutTimerSlidingPage;
 
@@ -74,44 +75,60 @@ public class SlidingPanelManager {
 
         Intent intent = mainActivity.getIntent();
 
+        workoutTitle = mainActivity.findViewById(R.id.workout_title);
+        workoutTimer =  mainActivity.findViewById(R.id.workout_timer);
+        workoutNameEditText = mainActivity.findViewById(R.id.workout_name_edit_text);
+
+
         boolean panel_enabled = intent.getBooleanExtra("panel_enabled",false);
         if(panel_enabled)
         {
+
             navController.navigate(R.id.navigation_workouts);
 
             setupRecycleView();
-            recyclerView.setHasFixedSize(true);
-            recyclerView.setItemViewCacheSize(20);
 
             WorkoutEntity workoutEntity;
             boolean isWorkoutTemplate = intent.getBooleanExtra("workout_template", false);
             if(isWorkoutTemplate)
             {
+                workoutTitle.setText(mainActivity.getResources().getString(R.string.empty_workout));
+                workoutNameEditText.setText(mainActivity.getResources().getString(R.string.empty_workout));
                 //slidingExerciseAdapter.setTemplateWorkout(true);
+
+                workoutEntity = new WorkoutEntity(mainActivity.getResources().getString(R.string.empty_workout),
+                        WorkoutEntity.WORKOUT_HISTORY);
+                slidingExerciseAdapter = new SlidingExerciseAdapter(workoutEntity);
+                recyclerView.setAdapter(slidingExerciseAdapter);
             }
             else
             {
                 int workoutId = intent.getIntExtra("workout_id", 0);
 
                 AppRoomDatabase appDb = AppRoomDatabase.getInstance(mainActivity);
-                workoutEntity = appDb.workoutTemplateDao().loadWorkout(workoutId);
+                workoutEntity = appDb.workoutDao().loadWorkout(workoutId);
 
-                slidingExerciseAdapter.setWorkoutEntity(workoutEntity);
+                slidingExerciseAdapter = new SlidingExerciseAdapter(workoutEntity);
+                recyclerView.setAdapter(slidingExerciseAdapter);
+
+                workoutTitle.setText(workoutEntity.getWorkoutName());
+                workoutNameEditText.setText(workoutEntity.getWorkoutName());
 
                 // Set workout name in adapter
                 //slidingExerciseAdapter.setWorkoutName(workoutName);
             }
 
+            recyclerView.setItemViewCacheSize(Integer.MAX_VALUE);
             slidingPanelActive = true;
 
             // Start the timer;
 
             startTimer();
 
-            workoutTimer =  mainActivity.findViewById(R.id.workout_timer);
+
+
             workoutTimerSlidingPage =  mainActivity.findViewById(R.id.workout_timer_sliding_page);
 
-            workoutNameEditText = mainActivity.findViewById(R.id.workout_name_edit_text);
             workoutNameEditText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -126,6 +143,17 @@ public class SlidingPanelManager {
                 @Override
                 public void afterTextChanged(Editable s) {
 
+                }
+            });
+
+            workoutNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if(!hasFocus) {
+                        workoutNameEditText.clearFocus();
+                    } else {
+
+                    }
                 }
             });
 
@@ -204,10 +232,10 @@ public class SlidingPanelManager {
 
                             int completedSets = 0;
                             int counter = 0;
-                            for(Exercise e : slidingExerciseAdapter.getExerciseList()) {
-                                Log.d("Exercise: ", e.getExerciseName());
+                            for(WorkoutExercise we : slidingExerciseAdapter.getWorkoutEntity().getWorkoutExercisesList()) {
+                                Log.d("Exercise: ", we.getExercise());
 
-                                for(Set s : slidingExerciseAdapter.getAdapterList().get(counter).getSets())
+                                for(Set s : we.getSets())
                                 {
                                     Log.d("Pos: ", Integer.toString(s.getPosition()));
                                     Log.d("Weight: ", Float.toString(s.getWeight()));
@@ -232,53 +260,67 @@ public class SlidingPanelManager {
                             }
                             else {
 
+                                AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+
+                                builder.setTitle(mainActivity.getResources().getString(R.string.finish_workout));
+                                builder.setMessage(mainActivity.getResources().getString(R.string.workout_finished_msg));
+
+                                builder.setPositiveButton(mainActivity.getResources().getString(R.string.finish_workout), new DialogInterface.OnClickListener() {
+
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        long currentTimeMilis = System.currentTimeMillis();
+                                        long workoutDuration = workoutTimeSeconds * 1000;
+
+                                        WorkoutEntity workoutEntity = new WorkoutEntity(
+                                                workoutNameEditText.getText().toString(),
+                                                WorkoutEntity.WORKOUT_HISTORY,
+                                                currentTimeMilis,
+                                                workoutDuration,
+                                                slidingExerciseAdapter.getWorkoutEntity().getWorkoutExercisesList().size());
+
+                                        List<WorkoutExercise> workoutExerciseList = new ArrayList<>();
+                                        for (WorkoutExercise we : slidingExerciseAdapter.getWorkoutEntity().workoutExercisesList) {
+
+                                            for(int i = we.getSets().size() - 1; i >= 0; i--)
+                                            {
+                                                if(!we.getSets().get(i).isChecked())
+                                                    we.getSets().remove(i);
+                                            }
+                                            workoutExerciseList.add(we);
+                                        }
+
+                                        workoutEntity.setWorkoutExercises(workoutExerciseList);
+
+                                        AppRoomDatabase appDb = AppRoomDatabase.getInstance(mainActivity);
+                                        appDb.workoutDao().insertWorkout(workoutEntity);
+
+                                        slidingPanelActive = false;
+                                        slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                                        navController.navigate(R.id.navigation_history);
+
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                                builder.setNegativeButton(mainActivity.getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                        // Do nothing
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                                AlertDialog alert = builder.create();
+                                alert.show();
+
                                 // Display dialog if users is sure to finish
 
 
                                 // Build History workout
 
-                                long currentTimeMilis = System.currentTimeMillis();
-                                long workoutDuration = workoutTimeSeconds * 1000;
 
-                                WorkoutEntity workoutEntity = new WorkoutEntity(
-                                        workoutNameEditText.getText().toString(),
-                                        WorkoutEntity.WORKOUT_HISTORY,
-                                        currentTimeMilis,
-                                        workoutDuration,
-                                        slidingExerciseAdapter.getExerciseList().size());
-
-                                List<WorkoutExercise> workoutExerciseList = new ArrayList<>();
-                                for (int i = 0; i < slidingExerciseAdapter.getExerciseList().size(); i++) {
-                                    slidingExerciseAdapter.saveSets();
-
-                                    for(int s = slidingExerciseAdapter.getAdapterList().get(i).getSets().size() - 1; s >= 0; s--)
-                                    {
-                                        if(!slidingExerciseAdapter.getAdapterList().get(i).getSets().get(s).isChecked())
-                                        {
-                                            slidingExerciseAdapter.getAdapterList().get(i).getSets().remove(s);
-                                            s--;
-                                        }
-
-                                    }
-
-                                    if(slidingExerciseAdapter.getAdapterList().get(i).getSets().isEmpty())
-                                        continue;
-
-                                    workoutExerciseList.add(
-                                            new WorkoutExercise(
-                                                    slidingExerciseAdapter.getExerciseList().get(i).getExerciseName(),
-                                                    slidingExerciseAdapter.getSets().get(i),
-                                                    slidingExerciseAdapter.getAdapterList().get(i).getSets()));
-                                }
-
-                                workoutEntity.setWorkoutExercises(workoutExerciseList);
-
-                                AppRoomDatabase appDb = AppRoomDatabase.getInstance(mainActivity);
-                                appDb.workoutTemplateDao().insertWorkout(workoutEntity);
-
-                                slidingPanelActive = false;
-                                slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-                                navController.navigate(R.id.navigation_history);
                             }
 
                         }
@@ -293,7 +335,7 @@ public class SlidingPanelManager {
                             //Intent intent = new Intent(getContext(), ExerciseItemPage.class);
                             //intent.putExtra("position", position);
                             //intent.putExtra("exercise_name", exercisesAdapter.getExerciseName(position));
-                            mainActivity.startActivityForResult(intent, SUBACTIVITY_CODE);;
+                            mainActivity.startActivityForResult(intent, SUBACTIVITY_CODE);
                         }
                     });
 
@@ -302,11 +344,34 @@ public class SlidingPanelManager {
                         @Override
                         public void onClick(View v) {
 
-                            slidingPanelActive = false;
-                            slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-                            navController.navigate(R.id.navigation_workouts);
-                            // Ask if sure to cancel workout.
-                            // then just exit panel view
+                            AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+
+                            builder.setTitle(mainActivity.getResources().getString(R.string.discard_workout));
+                            builder.setMessage(mainActivity.getResources().getString(R.string.discard_workout_msg));
+
+                            builder.setPositiveButton(mainActivity.getResources().getString(R.string.discard), new DialogInterface.OnClickListener() {
+
+                                public void onClick(DialogInterface dialog, int which) {
+                                    slidingPanelActive = false;
+                                    slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                                    navController.navigate(R.id.navigation_workouts);
+
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            builder.setNegativeButton(mainActivity.getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    // Do nothing
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            AlertDialog alert = builder.create();
+                            alert.show();
 
 
                         }
@@ -391,8 +456,6 @@ public class SlidingPanelManager {
         layoutManager = new LinearLayoutManager(mainActivity.getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        slidingExerciseAdapter = new SlidingExerciseAdapter();
-        recyclerView.setAdapter(slidingExerciseAdapter);
     }
 
     private void startTimer()

@@ -29,7 +29,7 @@
                     android:text="Midnight Workout"
                     android:background="@android:color/transparent"
                     android:padding="5dp"
-                    android:inputType="textMultiLine"
+                    android:singleLine="true"
                     android:maxLines="20"/>
 
                 <Button

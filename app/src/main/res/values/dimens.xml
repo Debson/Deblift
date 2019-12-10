@@ -4,7 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
 
-    <dimen name="workout_item_options_button">18dp</dimen>
+    <dimen name="workout_item_options_button">25dp</dimen>
     <dimen name="workout_name_text">18sp</dimen>
     <dimen name="workout_date">12sp</dimen>
     <dimen name="workout_exercise_entry_name">12sp</dimen>

@@ -2,6 +2,7 @@ package com.deblift.ui.workout;
 
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,9 +24,7 @@ import com.deblift.MainActivity;
 import com.deblift.R;
 import com.deblift.SlidingPanelManager;
 import com.deblift.database.AppRoomDatabase;
-import com.deblift.ui.exercises.Exercise;
-
-import java.util.ArrayList;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 public class WorkoutFragment extends Fragment {
 
@@ -36,6 +36,7 @@ public class WorkoutFragment extends Fragment {
     private AppRoomDatabase appDb;
 
     public final int SUBACTIVITY_CODE = 1;
+    public final int SUBACTIVITY_EDIT_CODE = 2;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -51,7 +52,7 @@ public class WorkoutFragment extends Fragment {
 
         appDb = AppRoomDatabase.getInstance(getActivity());
 
-        workoutAdapter = new WorkoutAdapter(this, appDb.workoutTemplateDao().loadAllWorkouts(WorkoutEntity.WORKOUT_TEMPLATE));
+        workoutAdapter = new WorkoutAdapter(this, appDb.workoutDao().loadAllWorkoutsOrderedDESC(WorkoutEntity.WORKOUT_TEMPLATE));
         recyclerView.setAdapter(workoutAdapter);
 
         final LayoutInflater factory = getLayoutInflater();
@@ -75,7 +76,15 @@ public class WorkoutFragment extends Fragment {
             case SUBACTIVITY_CODE: {
 
                 if(resultCode == Activity.RESULT_OK) {
-                    workoutAdapter.updateWorkoutTemplates(appDb.workoutTemplateDao().loadAllWorkouts(WorkoutEntity.WORKOUT_TEMPLATE));
+                    workoutAdapter.updateWorkoutTemplates(appDb.workoutDao().loadAllWorkouts(WorkoutEntity.WORKOUT_TEMPLATE));
+                    Log.d("WorkoutFragment: ", "WorkoutExercise Templates updated!");
+                }
+
+                break;
+            }
+            case SUBACTIVITY_EDIT_CODE: {
+                if(resultCode == Activity.RESULT_OK) {
+
                     Log.d("WorkoutFragment: ", "WorkoutExercise Templates updated!");
                 }
 
@@ -111,25 +120,59 @@ public class WorkoutFragment extends Fragment {
 
     }
 
-    private void setupStartEmptyWorkoutButton(View root)
+    private void setupStartEmptyWorkoutButton(final View root)
     {
-        if(!SlidingPanelManager.IsSlidingPanelActive()) {
 
-            Button startEmptyWorkoutButton = root.findViewById(R.id.workouts_start_empty_workout_button);
 
-            startEmptyWorkoutButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getContext(), MainActivity.class);
-                    intent.putExtra("panel_enabled", true);
-                    intent.putExtra("workout_template", true);
+
+        Button startEmptyWorkoutButton = root.findViewById(R.id.workouts_start_empty_workout_button);
+        final Intent intent = new Intent(getContext(), MainActivity.class);
+        intent.putExtra("panel_enabled", true);
+        intent.putExtra("workout_template", true);
+
+        startEmptyWorkoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(!SlidingPanelManager.IsSlidingPanelActive()) {
+
                     //intent.putExtra("exercise_name", adapter.getExerciseName(position));
                     startActivity(intent);
                 }
-            });
-        }
-        else {
-            // Display dialog to discard current workout and star new
-        }
+                else
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                    builder.setTitle(MainActivity.resoruces.getString(R.string.workout_in_progress));
+                    builder.setMessage(MainActivity.resoruces.getString(R.string.workout_in_progress_msg));
+
+                    builder.setPositiveButton(MainActivity.resoruces.getString(R.string.discard), new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            startActivity(intent);
+
+                            dialog.dismiss();
+                        }
+                    });
+
+                    builder.setNegativeButton(MainActivity.resoruces.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+
+                            // Do nothing
+                            dialog.dismiss();
+                        }
+                    });
+
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+            }
+        });
+
+
     }
 }

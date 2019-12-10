@@ -33,7 +33,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center|top"
-                android:text="00:00:00"></TextView>
+                android:text="00:00:00">
+            </TextView>
 
         </LinearLayout>
 
@@ -67,8 +68,8 @@
                         android:layout_height="wrap_content"
                         android:text="Midnight Workout"
                         android:background="@android:color/transparent"
-                        android:padding="5dp"
-                        android:inputType="textMultiLine"
+                        android:padding="10dp"
+                        android:singleLine="true"
                         android:maxLines="20"/>
 
                     <Button
@@ -76,9 +77,11 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_marginStart="5dp"
-                        android:foreground="@drawable/ic_menu_black_24dp"
                         android:background="?attr/selectableItemBackgroundBorderless"
-                        android:gravity="center" />
+                        android:backgroundTint="@color/sky_blue"
+                        android:foreground="@drawable/ic_menu_black_24dp"
+                        android:gravity="center"
+                        android:textColor="@color/sky_blue" />
 
                 </LinearLayout>
 
@@ -87,7 +90,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="00:00:00"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:paddingStart="10dp"
+                    android:paddingBottom="10dp"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/current_workout_list"
@@ -100,20 +105,21 @@
                 android:id="@+id/add_exercise_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/add_exercise"
+                android:layout_gravity="center"
                 android:background="@android:color/transparent"
                 android:foreground="?attr/selectableItemBackground"
-                android:layout_gravity="center"/>
+                android:text="@string/add_exercise"
+                android:textColor="@color/sky_blue" />
 
             <Button
                 android:id="@+id/cancel_workout_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/cancel_workout"
+                android:layout_gravity="center"
                 android:background="@android:color/transparent"
                 android:foreground="?attr/selectableItemBackground"
-                android:textColor="@android:color/holo_red_dark"
-                android:layout_gravity="center"/>
+                android:text="@string/cancel_workout"
+                android:textColor="@color/red" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

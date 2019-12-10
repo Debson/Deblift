@@ -13,6 +13,7 @@ package com.deblift.ui.workout;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -22,11 +23,14 @@ import androidx.recyclerview.widget.RecyclerView;
 public class SwipeToDeleteCallbackSliding extends ItemTouchHelper.SimpleCallback {
 
     private SlidingSetAdapter templateSetAdapter;
+    private SlidingExerciseAdapter parentAdapter;
     private final ColorDrawable background;
 
-    public SwipeToDeleteCallbackSliding(SlidingSetAdapter adapter) {
+    public SwipeToDeleteCallbackSliding(SlidingSetAdapter adapter, SlidingExerciseAdapter parentAdapter) {
         super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
         templateSetAdapter = adapter;
+        this.parentAdapter = parentAdapter;
+
         background = new ColorDrawable(Color.RED);
     }
 
@@ -39,6 +43,17 @@ public class SwipeToDeleteCallbackSliding extends ItemTouchHelper.SimpleCallback
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
         int position = viewHolder.getAdapterPosition();
         templateSetAdapter.removeItem(position);
+
+
+        /*
+         * This method is being called first in sequence of set/exercise deletion.
+         * First of all, delete set, if its the last set in the exercise(feature for SlidiingPanel only)
+         * then delete the exercise. Deletion of exercise must be performed after the set is deleted, otherwise
+         * SlidingSetAdapter will apply changes to the wrong adapter;
+         */
+        if(position <= 0)
+            parentAdapter.notifyDataSetChanged();
+
     }
 
     @Override
@@ -47,15 +62,12 @@ public class SwipeToDeleteCallbackSliding extends ItemTouchHelper.SimpleCallback
         View itemView = viewHolder.itemView;
         int backgroundCornerOffset = 20;
 
-        if (dX > 0) { // Swiping to the right
-            background.setBounds(itemView.getLeft(), itemView.getTop(),
-                    itemView.getLeft() + ((int) dX) + backgroundCornerOffset,
-                    itemView.getBottom());
-
-        } else if (dX < 0) { // Swiping to the left
+        // Swipe left
+        if (dX < 0) {
             background.setBounds(itemView.getRight() + ((int) dX) - backgroundCornerOffset,
                     itemView.getTop(), itemView.getRight(), itemView.getBottom());
-        } else { // view is unSwiped
+        } else {
+            // No swipe
             background.setBounds(0, 0, 0, 0);
         }
         background.draw(c);

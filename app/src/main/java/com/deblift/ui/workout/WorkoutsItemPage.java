@@ -1,9 +1,11 @@
 package com.deblift.ui.workout;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -46,7 +48,7 @@ public class WorkoutsItemPage extends AppCompatActivity {
         workoutId = intent.getIntExtra("workout_id", 0);
 
         AppRoomDatabase appDb = AppRoomDatabase.getInstance(this);
-        workoutEntity = appDb.workoutTemplateDao().loadWorkout(workoutId);
+        workoutEntity = appDb.workoutDao().loadWorkout(workoutId);
         workoutName = workoutEntity.getWorkoutName();
 
 
@@ -76,22 +78,47 @@ public class WorkoutsItemPage extends AppCompatActivity {
 
                 // Start workout clicked. Bring Sliding Up Panel, open it, start the timer
                 // Send workout name to the next page
+                final Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.putExtra("panel_enabled", true);
+                intent.putExtra("workout_id", workoutEntity.getWorkoutId());
 
                 if(!SlidingPanelManager.IsSlidingPanelActive()) {
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    intent.putExtra("panel_enabled", true);
-                    intent.putExtra("workout_id", workoutEntity.getWorkoutId());
+
                     //intent.putExtra("exercise_name", adapter.getExerciseName(position));
-                    //slidingPanelBottom.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                     startActivity(intent);
                 }
-                else {
-                    // Display dialog if user wants to discard current training
-                }
+                else
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
 
+                    builder.setTitle(MainActivity.resoruces.getString(R.string.workout_in_progress));
+                    builder.setMessage(MainActivity.resoruces.getString(R.string.workout_in_progress_msg));
+
+                    builder.setPositiveButton(MainActivity.resoruces.getString(R.string.discard), new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            startActivity(intent);
+
+                            dialog.dismiss();
+                        }
+                    });
+
+                    builder.setNegativeButton(MainActivity.resoruces.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            // Do nothing
+                            dialog.dismiss();
+                        }
+                    });
+
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
             }
         });
-
     }
 
     @Override

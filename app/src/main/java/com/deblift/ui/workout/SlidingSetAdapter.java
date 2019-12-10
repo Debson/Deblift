@@ -17,32 +17,27 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.deblift.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SlidingSetAdapter extends RecyclerView.Adapter<SlidingSetAdapter.MyViewHolder> {
 
-    private int setCounter = 1;
-    private boolean initialized = false;
-    private int parentIndex = 0;
-
-    private CheckBox setFinishedCheckBox;
-    private ArrayList<Boolean> checkedList = new ArrayList<>();
     private ArrayList<Set> sets = new ArrayList<>();
-    private SlidingExerciseAdapter parentAdapter;
+    private int parentIndex = 0;
 
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private int position;
+        public int position = 0;
         public TextView setCountText;
         public CheckBox setFinishedCheckBox;
         public EditText weightInput;
         public EditText repsInput;
-        private Set set;
 
 
 
         public MyViewHolder(@NonNull final View itemView) {
             super(itemView);
+
 
             setCountText = itemView.findViewById(R.id.set_number);
             setFinishedCheckBox = itemView.findViewById(R.id.set_finished_checkbox);
@@ -51,89 +46,13 @@ public class SlidingSetAdapter extends RecyclerView.Adapter<SlidingSetAdapter.My
 
             String weightStr = weightInput.getText().toString();
             String repsStr = repsInput.getText().toString();
-            float weight = weightStr.isEmpty() ? 0.f : Float.parseFloat(weightStr);
-            int reps = repsStr.isEmpty() ? 0 : Integer.parseInt(repsStr);
-
-            set = new Set(position, weight, reps, setFinishedCheckBox.isChecked());
-            sets.add(set);
 
             // ALLOW User can only check mark sets with both filled edit fields. Currently disabled
             // There is no text in text fields so disable check boxes on start.
             //setFinishedCheckBox.setEnabled(false);
 
-            setFinishedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                    if(isChecked) {
-                        itemView.setBackgroundColor(Color.argb(40, 0, 255, 0));
-                        weightInput.setBackgroundColor(Color.argb(0, 0, 0, 0));
-                        repsInput.setBackgroundColor(Color.argb(0, 0, 0, 0));
-
-                    }
-                    else {
-                        itemView.setBackgroundColor(Color.argb(0, 0, 0, 0));
-                        weightInput.setBackgroundResource(R.drawable.border_textedit);
-                        repsInput.setBackgroundResource(R.drawable.border_textedit);
-                    }
-
-                    set.setChecked(isChecked);
-                }
-            });
-
-            weightInput.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    // Only enable textbox when both editable fields are not empty
-                    /*if(s.equals("") || repsInput.getText().toString().isEmpty())
-                        setFinishedCheckBox.setEnabled(false);
-                    else
-                        setFinishedCheckBox.setEnabled(true);*/
-                    set.setWeight(Float.parseFloat(s.toString()));
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-
-                }
-            });
-
-            repsInput.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    // Only enable textbox when both editable fields are not empty
-                    /*if(s.equals("") || weightInput.getText().toString().isEmpty())
-                        setFinishedCheckBox.setEnabled(false);
-                    else
-                        setFinishedCheckBox.setEnabled(true);*/
-
-                    set.setReps(Integer.parseInt(s.toString()));
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-
-                }
-            });
         }
-        void setPosition(int position) {
-            this.position = position;
-
-            set.setPosition(position);
-
-            setCountText.setText(Integer.toString(position));
-        }
-
     }
 
 
@@ -141,7 +60,16 @@ public class SlidingSetAdapter extends RecyclerView.Adapter<SlidingSetAdapter.My
 
     public SlidingSetAdapter() {
 
+        sets.add(new Set(1, 0, 0, false));
     }
+
+    public SlidingSetAdapter(ArrayList<Set> sets) {
+        this.sets = sets;
+        if(sets.isEmpty())
+            sets.add(new Set(1, 0, 0, false));
+
+    }
+
 
     @NonNull
     @Override
@@ -153,31 +81,107 @@ public class SlidingSetAdapter extends RecyclerView.Adapter<SlidingSetAdapter.My
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
 
-        holder.setPosition(position);
+        holder.setCountText.setText(Integer.toString(sets.get(position).getPosition()));
 
+        holder.repsInput.setText(Integer.toString(sets.get(position).getReps()));
+        holder.weightInput.setText(Float.toString(sets.get(position).getWeight()));
+
+        holder.setFinishedCheckBox.setTag(position);
+        holder.setFinishedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if(isChecked) {
+                    holder.itemView.setBackgroundColor(Color.argb(40, 0, 255, 0));
+                    holder.weightInput.setBackgroundColor(Color.argb(0, 0, 0, 0));
+                    holder.repsInput.setBackgroundColor(Color.argb(0, 0, 0, 0));
+
+                }
+                else {
+                    holder.itemView.setBackgroundColor(Color.argb(0, 0, 0, 0));
+                    holder.weightInput.setBackgroundResource(R.drawable.border_textedit);
+                    holder.repsInput.setBackgroundResource(R.drawable.border_textedit);
+                }
+                sets.get((Integer)buttonView.getTag()).setChecked(isChecked);
+            }
+        });
+
+
+        holder.weightInput.setTag(position);
+        holder.weightInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Only enable textbox when both editable fields are not empty
+                    /*if(s.equals("") || repsInput.getText().toString().isEmpty())
+                        setFinishedCheckBox.setEnabled(false);
+                    else
+                        setFinishedCheckBox.setEnabled(true);*/
+                    if(s.length() > 0)
+                        sets.get(holder.getAdapterPosition()).setWeight(Float.parseFloat(s.toString()));
+                    else
+                        sets.get(holder.getAdapterPosition()).setWeight(0);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        holder.repsInput.setTag(position);
+        holder.repsInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Only enable textbox when both editable fields are not empty
+                    /*if(s.equals("") || weightInput.getText().toString().isEmpty())
+                        setFinishedCheckBox.setEnabled(false);
+                    else
+                        setFinishedCheckBox.setEnabled(true);*/
+                if(s.length() > 0)
+                    sets.get(holder.getAdapterPosition()).setReps(Integer.parseInt(s.toString()));
+                else
+                    sets.get(holder.getAdapterPosition()).setReps(0);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
     }
 
     @Override
     public int getItemCount() {
-        return setCounter;
+        return sets.size();
     }
-    public void addItem(int pos) {
-        setCounter++;
+    public void addItem() {
+        sets.add(new Set(sets.size() + 1, 0, 0, false));
 
         notifyDataSetChanged();
     }
 
     public void removeItem(int pos) {
-        setCounter--;
 
-        if(setCounter <= 0)
-        {
-            parentAdapter.removeItem(parentIndex);
+        sets.remove(pos);
+
+        for(int i = pos; i < sets.size(); i++) {
+            sets.get(i).setPosition(i + 1);
         }
 
+        notifyItemRemoved(pos);
         notifyDataSetChanged();
     }
 
@@ -185,28 +189,11 @@ public class SlidingSetAdapter extends RecyclerView.Adapter<SlidingSetAdapter.My
         this.parentIndex = parentIndex;
     }
 
-    public void setParentAdapter(SlidingExerciseAdapter adapter) {
-        this.parentAdapter = adapter;
-    }
 
-    public void setSetCounter(int setCounter) {
-        this.setCounter = setCounter;
-    }
-
-
-
-    public void initializeSetCounter(int setCounter) {
-        if(!initialized) {
-            this.setCounter = setCounter;
-            initialized = true;
-        }
-    }
-
-    public boolean isSetCounterInitialized() {
-        return initialized;
-    }
-
-    public ArrayList<Set> getSets() {
-        return sets;
+    public void setSets(ArrayList<Set> sets) {
+        this.sets = sets;
+        if(sets.isEmpty())
+            sets.add(new Set(1, 0, 0, false));
+        notifyDataSetChanged();
     }
 }

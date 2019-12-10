@@ -3,13 +3,9 @@ package com.deblift.ui.workout;
 public class Set {
 
     private int position;
-
     private float weight;
-
     private int reps;
-
     private boolean checked;
-
 
     public Set(int position, float weight, int reps, boolean checked) {
         this.position = position;

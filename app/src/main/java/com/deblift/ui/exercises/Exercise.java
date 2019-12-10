@@ -1,3 +1,11 @@
+/*
+ * Date: 10/12/2019
+ * Name: Michal Debski
+ * Class: DT211C
+ * Description:
+ *
+ */
+
 package com.deblift.ui.exercises;
 
 
@@ -29,7 +37,7 @@ public class Exercise
     public Exercise(String exerciseName, String muscleGroup, String exerciseDescription, int exerciseIcon) {
         this.exerciseName = exerciseName;
         this.muscleGroup = muscleGroup;
-        this.exerciseDescription = "exercise description1;exercise description 2";
+        this.exerciseDescription = exerciseDescription;
         this.exerciseIcon = exerciseIcon;
 
     }

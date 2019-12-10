@@ -9,7 +9,7 @@ import androidx.room.Update;
 
 
 @Dao
-public interface WorkoutTemplateDao {
+public interface WorkoutDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertWorkout(WorkoutEntity workout);
 
@@ -19,12 +19,17 @@ public interface WorkoutTemplateDao {
     @Delete
     public void deleteWorkout(WorkoutEntity workout);
 
-    @Query("SELECT * FROM workouts where workout_type = :workoutTYpe")
-    public WorkoutEntity[] loadAllWorkouts(int workoutTYpe);
+    @Query("SELECT * FROM workouts where workout_type = :workoutType;")
+    public WorkoutEntity[] loadAllWorkouts(int workoutType);
 
-    @Query("SELECT * FROM workouts where workout_id = :workoutId")
+    @Query("SELECT * FROM workouts where workout_id = :workoutId;")
     public WorkoutEntity loadWorkout(int workoutId);
 
+    @Query("SELECT * FROM workouts where workout_type = :workoutType ORDER BY workout_date DESC;")
+    public WorkoutEntity[] loadAllWorkoutsOrderedDESC(int workoutType);
+
+    @Query("SELECT * FROM workouts where workout_type = :workoutType ORDER BY workout_date ASC;")
+    public WorkoutEntity[] loadAllWorkoutsOrderedASC(int workoutType);
 
     @Query("DELETE FROM workouts")
     void deleteAll();

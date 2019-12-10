@@ -28,7 +28,6 @@ public class HistoryFragment extends Fragment {
         setHasOptionsMenu(true);
 
         recyclerView = root.findViewById(R.id.history_list);
-        recyclerView.setHasFixedSize(true);
         recyclerView.setItemViewCacheSize(20);
 
         layoutManager = new LinearLayoutManager(getContext());
@@ -37,7 +36,7 @@ public class HistoryFragment extends Fragment {
 
         AppRoomDatabase appDb = AppRoomDatabase.getInstance(getActivity());
 
-        WorkoutEntity[] workouts = appDb.workoutTemplateDao().loadAllWorkouts(WorkoutEntity.WORKOUT_HISTORY);
+        WorkoutEntity[] workouts = appDb.workoutDao().loadAllWorkoutsOrderedDESC(WorkoutEntity.WORKOUT_HISTORY);
 
         historyAdapter = new HistoryAdapter(this, workouts);
         recyclerView.setAdapter(historyAdapter);
@@ -52,5 +51,11 @@ public class HistoryFragment extends Fragment {
         //intent.putExtra("position", position);
         //intent.putExtra("exercise_name", adapter.getExerciseName(position));
         startActivity(intent);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        historyAdapter.notifyDataSetChanged();
     }
 }

@@ -5,13 +5,13 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/set_number"
@@ -19,7 +19,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
                 android:gravity="center"
-                android:text="1" />
+                android:text="1"
+                android:textColor="@color/sky_blue" />
 
             <TextView
                 android:id="@+id/textView4"
@@ -32,7 +33,7 @@
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.25"
+                android:layout_weight="0.3"
                 android:gravity="center">
 
                 <EditText
@@ -45,14 +46,14 @@
                     android:digits="0123456789."
                     android:ems="10"
                     android:gravity="center"
-                    android:inputType="numberDecimal"
-                    android:hint="0"/>
+                    android:hint="0"
+                    android:inputType="numberDecimal" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.25"
+                android:layout_weight="0.3"
                 android:gravity="center">
 
                 <EditText
@@ -64,15 +65,21 @@
                     android:background="@drawable/border_textedit"
                     android:ems="10"
                     android:gravity="center"
-                    android:inputType="numberSigned"
-                    android:hint="0"/>
+                    android:hint="0"
+                    android:inputType="numberSigned" />
 
             </RelativeLayout>
 
-            <CheckBox
-                android:id="@+id/set_finished_checkbox"
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_weight="0.02">
+
+                <CheckBox
+                    android:id="@+id/set_finished_checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
 
 
         </TableRow>

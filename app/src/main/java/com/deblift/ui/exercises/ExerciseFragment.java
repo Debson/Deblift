@@ -1,3 +1,11 @@
+/*
+ * Date: 10/12/2019
+ * Name: Michal Debski
+ * Class: DT211C
+ * Description:
+ *
+ */
+
 package com.deblift.ui.exercises;
 
 import android.content.Intent;
@@ -20,8 +28,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.deblift.R;
 import com.deblift.database.AppRoomDatabase;
-
-import java.util.ArrayList;
 
 
 public class ExerciseFragment extends Fragment {
@@ -82,7 +88,7 @@ public class ExerciseFragment extends Fragment {
 
     public void goToExerciseItemPage(View view) {
         Intent intent = new Intent(getActivity().getApplicationContext(), ExerciseItemPage.class);
-        TextView exName = (TextView)view.findViewById(R.id.exerciseNameText);
+        TextView exName = (TextView)view.findViewById(R.id.exercise_name_text);
         if(exName != null)
             intent.putExtra("exercise_name", exName.getText());
         startActivity(intent);

@@ -24,26 +24,20 @@ import com.deblift.ui.history.WorkoutExercise;
 
 public class SlidingExerciseAdapter extends RecyclerView.Adapter<SlidingExerciseAdapter.MyViewHolder> {
 
-    private static ArrayList<SlidingSetAdapter> adapterList = new ArrayList<>();
-    private ArrayList<Exercise> exercises = new ArrayList<>();
-    private ArrayList<Integer> sets = new ArrayList<>();
-
     private WorkoutEntity workoutEntity;
-
-    private Context context;
-
     private PopupMenu popup;
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
-        RecyclerView recyclerView;
 
+    class MyViewHolder extends RecyclerView.ViewHolder {
+
+        private RecyclerView recyclerView;
         private TextView exerciseName;
         private Button addSetButton;
         private Button editExerciseButton;
         private ItemTouchHelper itemTouchHelper;
-        SlidingSetAdapter slidingSetAdapter;
+        private SlidingSetAdapter slidingSetAdapter;
 
-        public MyViewHolder(View itemView)
+        public MyViewHolder(View itemView, SlidingExerciseAdapter parentAdapter)
         {
             super(itemView);
             exerciseName = itemView.findViewById(R.id.exercise_name_text);;
@@ -51,20 +45,19 @@ public class SlidingExerciseAdapter extends RecyclerView.Adapter<SlidingExercise
             addSetButton = itemView.findViewById(R.id.add_set_button);
             editExerciseButton = itemView.findViewById(R.id.edit_exercise_button);
             slidingSetAdapter = new SlidingSetAdapter();
-            adapterList.add(slidingSetAdapter);
 
             recyclerView.setAdapter(slidingSetAdapter);
-            itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallbackSliding(slidingSetAdapter));
+            itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallbackSliding(slidingSetAdapter, parentAdapter));
             itemTouchHelper.attachToRecyclerView(recyclerView);
 
-
+            recyclerView.setItemViewCacheSize(Integer.MAX_VALUE);
             recyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
         }
     }
 
 
-    public SlidingExerciseAdapter() {
-
+    public SlidingExerciseAdapter(WorkoutEntity workoutEntity) {
+        this.workoutEntity = workoutEntity;
 
     }
 
@@ -75,32 +68,24 @@ public class SlidingExerciseAdapter extends RecyclerView.Adapter<SlidingExercise
                 .inflate(R.layout.activity_sliding_workout_exercise_listview, parent, false);
 
 
-        context = parent.getContext();
 
-        return new MyViewHolder(root);
+        return new MyViewHolder(root, this);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
-        holder.exerciseName.setText(exercises.get(position).getExerciseName());
 
+        holder.exerciseName.setText(workoutEntity.workoutExercisesList.get(position).getExercise());
 
         holder.slidingSetAdapter.setParentIndex(position);
-        holder.slidingSetAdapter.setParentAdapter(this);
-
-        // That block will initialize set counter with values obtained in "updateAdapterWithWorkout" method
-        if(!sets.isEmpty() && position < sets.size()) {
-            holder.slidingSetAdapter.setSetCounter(sets.get(position));
-            sets.set(position, holder.slidingSetAdapter.getItemCount());
-        }
-
+        holder.slidingSetAdapter.setSets(workoutEntity.workoutExercisesList.get(position).getSets());
 
         // Handle buttons
         holder.addSetButton.setTag(position);
         holder.addSetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.slidingSetAdapter.addItem(position);
+                holder.slidingSetAdapter.addItem();
             }
         });
 
@@ -116,7 +101,9 @@ public class SlidingExerciseAdapter extends RecyclerView.Adapter<SlidingExercise
 
                         switch(item.getItemId()) {
                             case R.id.exercise_menu_remove: {
-                                removeItem(position);
+                                removeItem(holder.getAdapterPosition());
+                                holder.slidingSetAdapter.notifyDataSetChanged();
+
                                 break;
                             }
                         }
@@ -126,66 +113,30 @@ public class SlidingExerciseAdapter extends RecyclerView.Adapter<SlidingExercise
                 });
 
                 popup.show();
-
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return exercises.size();
+        return workoutEntity.workoutExercisesList.size();
     }
 
+    public void addItem(WorkoutExercise workoutExercise) {
+        workoutEntity.workoutExercisesList.add(workoutExercise);
 
-    public void saveSets() {
-        sets.clear();
-        for(int i = 0; i < adapterList.size(); i++)
-            sets.add(i, adapterList.get(i).getItemCount());
-    }
-
-    public void addItem(Exercise exercise) {
-        exercises.add(exercise);
         notifyDataSetChanged();
-        //notifyItemInserted(exercises.size() + 1);
+        notifyItemInserted(workoutEntity.workoutExercisesList.size() - 1);
     }
 
     public void removeItem(int pos) {
-        exercises.remove(pos);
+
+        workoutEntity.workoutExercisesList.remove(pos);
+
         notifyItemRemoved(pos);
     }
 
-    public ArrayList<SlidingSetAdapter> getAdapterList() {
-        return adapterList;
-    }
-
-    public ArrayList<Exercise> getExerciseList() {
-        return exercises;
-    }
-
-    public ArrayList<Integer> getSets() {
-        return sets;
-    }
-
-
-
-    public void setWorkoutEntity(WorkoutEntity workoutEntity) {
-        this.workoutEntity = workoutEntity;
-
-        updateAdapterWithWorkout();
-    }
-
-    public void updateAdapterWithWorkout()
-    {
-        exercises.clear();
-        sets.clear();
-        AppRoomDatabase appDb = AppRoomDatabase.getInstance(context);
-        for(WorkoutExercise w : workoutEntity.workoutExercisesList) {
-            Exercise ex = appDb.exercisesDao().loadExercise(w.getExercise());
-            exercises.add(ex);
-
-            sets.add(w.getSetCount());
-
-        };
-
+    public WorkoutEntity getWorkoutEntity() {
+        return workoutEntity;
     }
 }

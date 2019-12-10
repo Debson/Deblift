@@ -1,3 +1,11 @@
+/*
+ * Date: 10/12/2019
+ * Name: Michal Debski
+ * Class: DT211C
+ * Description:
+ *
+ */
+
 package com.deblift.ui.exercises;
 
 import androidx.room.Dao;
@@ -19,15 +27,15 @@ public interface ExerciseDao {
     @Delete
     public void deleteExercise(Exercise exercise);
 
-    @Query("SELECT * FROM exercises")
+    @Query("SELECT * FROM exercises;")
     public Exercise[] loadAllExercises();
 
-    @Query("SELECT * FROM exercises where exercise_name = :exerciseName")
+    @Query("SELECT * FROM exercises where exercise_name = :exerciseName;")
     public Exercise loadExercise(String exerciseName);
 
-    @Query("DELETE FROM exercises")
+    @Query("DELETE FROM exercises;")
     void deleteAll();
 
-    @Query("SELECT exercise_description from exercises where exercise_name = :exerciseName")
+    @Query("SELECT exercise_description from exercises where exercise_name = :exerciseName;")
     public String getExerciseDescription(String exerciseName);
 }

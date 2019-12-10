@@ -85,6 +85,8 @@
                 android:id="@+id/workout_start_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/border_button"
+                android:foreground="?android:attr/selectableItemBackground"
                 android:text="@string/start_workout" />
 
         </LinearLayout>

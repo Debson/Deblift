@@ -1,6 +1,8 @@
 package com.deblift.ui.workout;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -68,7 +70,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.MyViewHo
 
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
 
         holder.workoutName.setText(workoutEntities[position].getWorkoutName());
         String dateStr = prepareWorkoutDateString(position);
@@ -89,6 +91,16 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.MyViewHo
                     public boolean onMenuItemClick(MenuItem item) {
 
                         switch(item.getItemId()) {
+                            case R.id.workout_menu_edit: {
+
+                                Intent intent = new Intent(workoutFragment.getContext(), WorkoutTemplatePage.class);
+
+                                intent.putExtra("edit_workout", true);
+                                intent.putExtra("workout_id", workoutEntities[holder.getAdapterPosition()].getWorkoutId());
+
+                                workoutFragment.startActivityForResult(intent, workoutFragment.SUBACTIVITY_EDIT_CODE);
+                                break;
+                            }
                             case R.id.workout_menu_delete: {
                                 // get workout name from textfield
                                 // delete workout from database, update
@@ -101,8 +113,8 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.MyViewHo
                                 try {
                                     AppRoomDatabase appDb = AppRoomDatabase.getInstance(workoutFragment.getActivity());
                                     Log.d("WorkoutAdapter", Integer.toString(pos));
-                                    appDb.workoutTemplateDao().deleteWorkout(workoutEntities[pos]);
-                                    workoutEntities = appDb.workoutTemplateDao().loadAllWorkouts(WorkoutEntity.WORKOUT_TEMPLATE);
+                                    appDb.workoutDao().deleteWorkout(workoutEntities[pos]);
+                                    workoutEntities = appDb.workoutDao().loadAllWorkouts(WorkoutEntity.WORKOUT_TEMPLATE);
 
                                     notifyItemRemoved(pos);
                                 } catch(Exception e) {
@@ -110,17 +122,6 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.MyViewHo
                                 }
                                 break;
                             }
-                            // TO BE IMPLEMENTED
-                            /*case R.id.workout_menu_duplicate: {
-
-                                notifyDataSetChanged();
-                                break;
-                            }
-                            case R.id.workout_menu_edit: {
-
-                                notifyDataSetChanged();
-                                break;
-                            }*/
                         }
 
                         return false;
@@ -134,10 +135,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.MyViewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int pos = position;
-                if(pos >= workoutEntities.length)
-                    pos = position - 1;
-                workoutFragment.goToWorkoutPage(workoutEntities[position].getWorkoutId());
+                workoutFragment.goToWorkoutPage(workoutEntities[holder.getAdapterPosition()].getWorkoutId());
             }
         });
     }
@@ -157,9 +155,11 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.MyViewHo
     private String prepareWorkoutExercisesString(int position) {
         String str = "";
         for(WorkoutExercise w : workoutEntities[position].workoutExercisesList) {
-            str += w.getSetCount() + " x ";
-            str += w.getExercise();
-            str += '\n';
+            if(w.getSets().size() > 0) {
+                str += w.getSets().size() + " x ";
+                str += w.getExercise();
+                str += '\n';
+            }
         }
 
         return str;

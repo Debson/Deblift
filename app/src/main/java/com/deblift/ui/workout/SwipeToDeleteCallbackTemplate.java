@@ -42,5 +42,22 @@ public class SwipeToDeleteCallbackTemplate extends ItemTouchHelper.SimpleCallbac
         templateSetAdapter.removeItem(position);
     }
 
+    @Override
+    public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        View itemView = viewHolder.itemView;
+        int backgroundCornerOffset = 20;
+
+        // Swipe left
+        if (dX < 0) {
+            background.setBounds(itemView.getRight() + ((int) dX) - backgroundCornerOffset,
+                    itemView.getTop(), itemView.getRight(), itemView.getBottom());
+        } else {
+            // No swipe
+            background.setBounds(0, 0, 0, 0);
+        }
+        background.draw(c);
+    }
+
 
 }

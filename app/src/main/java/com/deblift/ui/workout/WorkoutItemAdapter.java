@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,14 +19,16 @@ public class WorkoutItemAdapter extends RecyclerView.Adapter<WorkoutItemAdapter.
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView exerciseName;
-        TextView muscleGroup;
+        private TextView exerciseName;
+        private TextView muscleGroup;
+        private ImageView exerciseImage;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            exerciseName = itemView.findViewById(R.id.exerciseNameText);
-            muscleGroup = itemView.findViewById(R.id.bodyPartText);
+            exerciseName = itemView.findViewById(R.id.exercise_name_text);
+            muscleGroup = itemView.findViewById(R.id.muscle_group_text);
+            exerciseImage = itemView.findViewById(R.id.exercise_image);
         }
     }
 
@@ -53,6 +56,7 @@ public class WorkoutItemAdapter extends RecyclerView.Adapter<WorkoutItemAdapter.
         holder.exerciseName.setText(exerciseName);
         String muscleGroup = appDb.exercisesDao().loadExercise(exerciseName).getMuscleGroup();
         holder.muscleGroup.setText(muscleGroup);
+        holder.exerciseImage.setImageResource(R.drawable.ic_deblift_small);
 
     }
 

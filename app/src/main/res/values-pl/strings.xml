@@ -1,0 +1,78 @@
+<resources>
+    <string name="app_name">Deblift</string>
+    <string name="database_name">deblift_db</string>
+
+    <string name="title_profile">Profil</string>
+    <string name="title_history">Historia</string>
+    <string name="title_workout">Treningi</string>
+    <string name="title_exercises">Cwiczenia</string>
+    <string name="search_title">Szukaj</string>
+    <string name="search_hint">Wpisz aby wyszukac</string>
+    <string name="empty_workout">Pusty Trening</string>
+
+
+    <string name="history_workout_name">Przykladowy Trening</string>
+    <string name="history_workout_date">19 Wrz 2019</string>
+    <string name="history_workout_exercises">Cwiczenia</string>
+    <string name="history_workout_best_set">Najlepszy Set</string>
+
+    <string name="quick_start">Szybki start</string>
+    <string name="start_empty_workout">Wystartuj pusty trening</string>
+    <string name="my_routines">Moje rutiny</string>
+
+
+    <string name="set">Set</string>
+    <string name="previous">Poprzedni</string>
+    <string name="weight_unit">kg</string>
+    <string name="reps">Powtorzenia</string>
+    <string name="empty_divider">-</string>
+    <string name="add_set">Dodaj Set</string>
+    <string name="add_exercise">Dodaj Cwiczenie</string>
+    <string name="cancel_workout">Zakoncz Trening</string>
+    <string name="exercise_name">Nazwa Cwiczenia</string>
+    <string name="new_workout_template">Nowy Szablon Treningu</string>
+    <string name="start_workout">Zacznij Trening</string>
+    <string name="exerciseName">Cwiczenia</string>
+    <string name="muscle_group">Grupa Miesniowa</string>
+    <string name="exercise_instructions">Instrukcje</string>
+
+    <string name="last_performed">Ostatnio wykonany:</string>
+
+
+    <string name="toolbar_finnish">Zakoncz</string>
+    <string name="toolbar_save">Zapisz</string>
+
+    <string name="menu_edit">Edytuj</string>
+    <string name="menu_delete">Usun</string>
+    <string name="menu_duplicate">Duplikat</string>
+    <string name="menu_remove">Usun</string>
+
+    <string name="test">18dp</string>
+    <string name="exercise_description_delimiter">;</string>
+
+    <string name="profile_date">Data</string>
+    <string name="profile_student">Uczen</string>
+    <string name="profile_class">Klasa</string>
+    <string name="profile_year">Rok:</string>
+
+    <!-- INFO -->
+    <string name="my_name">Michal Debski</string>
+    <string name="current_date">10/12/2019</string>
+    <string name="my_class">DT211C</string>
+    <string name="my_year">3ci</string>
+
+    <!-- Dialog -->
+    <string name="discard_workout">Discard Workout?</string>
+    <string name="discard_workout_msg">Are you sure you want to discard this workout? This cannot be undone.</string>
+    <string name="cancel">Cancel</string>
+    <string name="discard">Discard</string>
+
+    <string name="workout_finished">Are you finished?</string>
+    <string name="workout_finished_msg">All invalid/empty sets will be discarded. All sets with valid data will be automatically marked as complete.</string>
+    <string name="finish_workout">Finish Workout</string>
+
+    <string name="workout_in_progress">Workout in progress</string>
+    <string name="workout_in_progress_msg">You are currently performing a workout. Would you like to discard it?</string>
+
+
+</resources>

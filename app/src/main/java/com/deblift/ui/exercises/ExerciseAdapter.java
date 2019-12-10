@@ -1,3 +1,11 @@
+/*
+ * Date: 10/12/2019
+ * Name: Michal Debski
+ * Class: DT211C
+ * Description:
+ *
+ */
+
 package com.deblift.ui.exercises;
 
 import android.util.Log;
@@ -56,12 +64,13 @@ public class ExerciseAdapter extends RecyclerView.Adapter {
             }
         });
 
-        TextView exerciseText = holder.itemView.findViewById(R.id.exerciseNameText);
-        TextView muscleGroupText = holder.itemView.findViewById(R.id.bodyPartText);
-        ImageView exerciseIcon = holder.itemView.findViewById(R.id.icon);
+        TextView exerciseText = holder.itemView.findViewById(R.id.exercise_name_text);
+        TextView muscleGroupText = holder.itemView.findViewById(R.id.muscle_group_text);
+        ImageView exerciseIcon = holder.itemView.findViewById(R.id.exercise_image);
 
         exerciseText.setText(displayedExerciseItems.get(position).getExerciseName());
         muscleGroupText.setText(displayedExerciseItems.get(position).getMuscleGroup());
+        //exerciseIcon.setImageResource(R.drawable.ic_deblift_small);
         exerciseIcon.setImageResource(displayedExerciseItems.get(position).getExerciseIcon());
     }
 

@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.deblift.R;
 import com.deblift.ui.exercises.Exercise;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
@@ -85,9 +84,9 @@ public class WorkoutAddExerciseAdapter extends RecyclerView.Adapter {
         });
 
 
-        TextView exerciseText = holder.itemView.findViewById(R.id.exerciseNameText);
-        TextView muscleGroupText = holder.itemView.findViewById(R.id.bodyPartText);
-        ImageView exerciseIcon = holder.itemView.findViewById(R.id.icon);
+        TextView exerciseText = holder.itemView.findViewById(R.id.exercise_name_text);
+        TextView muscleGroupText = holder.itemView.findViewById(R.id.muscle_group_text);
+        ImageView exerciseIcon = holder.itemView.findViewById(R.id.exercise_image);
 
         exerciseText.setText(displayedExerciseItems.get(position).getExerciseName());
         muscleGroupText.setText(displayedExerciseItems.get(position).getMuscleGroup());

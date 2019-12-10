@@ -1,15 +1,22 @@
 package com.deblift;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 
 import com.deblift.database.AppRoomDatabase;
 import com.deblift.database.DatabaseGenerator;
 import com.deblift.ui.exercises.Exercise;
+import com.deblift.ui.history.WorkoutExercise;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.Nullable;
@@ -84,15 +91,42 @@ public class MainActivity extends AppCompatActivity {
                     for (String exName : exerciseNamesArray) {
                         Exercise ex = appDb.exercisesDao().loadExercise(exName);
 
+                        WorkoutExercise we = new WorkoutExercise(ex.getExerciseName());
 
-                        slidingPanelManager.getAdapter().addItem(ex);
+
+                        slidingPanelManager.getAdapter().addItem(we);
                     }
+
+                    navController.navigate(R.id.navigation_workouts);
                 }
 
                 break;
             }
         }
     }
+
+    // Override dispatch touch event so all the EditText will lose focus on outside click
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if ( v instanceof EditText) {
+                Rect outRect = new Rect();
+                v.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int)ev.getRawX(), (int)ev.getRawY())) {
+                    v.clearFocus();
+
+                    // Hide keyboard
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+            }
+        }
+
+        return super.dispatchTouchEvent(ev);
+    }
+
+
 
     public NavController getNavController() {
         return navController;

@@ -26,10 +26,9 @@
                     android:id="@+id/workouts_quickstart_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-smallcaps"
+                    android:layout_marginBottom="5dp"
                     android:paddingStart="5dp"
                     android:paddingEnd="5dp"
-                    android:layout_marginBottom="5dp"
                     android:text="@string/quick_start"
                     android:textSize="14sp" />
 
@@ -37,10 +36,10 @@
                     android:id="@+id/workouts_start_empty_workout_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/start_empty_workout"
-                    android:background="@android:color/holo_blue_light"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/border_button"
                     android:foreground="?android:attr/selectableItemBackground"
-                    android:layout_marginBottom="5dp"/>
+                    android:text="@string/start_empty_workout" />
 
                 <TableLayout
                     android:layout_width="match_parent"
@@ -56,7 +55,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:fontFamily="sans-serif-smallcaps"
                             android:gravity="left"
                             android:paddingStart="5dp"
                             android:text="@string/my_routines"
