@@ -4,7 +4,7 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
-        applicationId "com.example.deblift"
+        applicationId "com.deblift"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
@@ -21,11 +21,22 @@ android {
 
 dependencies {
     repositories {
+        jcenter()
         mavenCentral()
     }
 
-    compile 'com.sothree.slidinguppanel:library:3.4.0'
+    def room_version = "2.2.2"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+
+    implementation 'com.google.code.gson:gson:2.8.6'
+
+    //
+    implementation 'com.opencsv:opencsv:4.6'
+
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'com.google.android.material:material:1.0.0'

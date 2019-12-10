@@ -27,6 +27,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Midnight Workout"
+                    android:background="@android:color/transparent"
+                    android:padding="5dp"
                     android:inputType="textMultiLine"
                     android:maxLines="20"/>
 
@@ -53,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:foreground="?attr/selectableItemBackground"
-                android:text="add exercise" />
+                android:text="@string/add_exercise" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

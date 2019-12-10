@@ -48,17 +48,31 @@
                         android:background="?android:attr/selectableItemBackgroundBorderless"
                         android:clickable="true"
                         android:foreground="@drawable/ic_menu_black_24dp" />
+
                 </TableRow>
 
             </TableLayout>
 
-            <TextView
-                android:id="@+id/workout_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="0dp"
-                android:text="Last performed: 19 Sep 2019"
-                android:textSize="@dimen/workout_date" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/workout_performed_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Last performed: "
+                    android:textSize="@dimen/workout_date" />
+
+                <TextView
+                    android:id="@+id/workout_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="0dp"
+                    android:text="19 Sep 2019"
+                    android:textSize="@dimen/workout_date" />
+            </LinearLayout>
 
             <Space
                 android:layout_width="match_parent"

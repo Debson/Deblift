@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
-
+<!-- TO BE IMPLEMENTED
     <item
         android:id="@+id/workout_menu_edit"
         android:title="@string/menu_edit" />
-
     <item
         android:id="@+id/workout_menu_duplicate"
         android:title="@string/menu_duplicate" />
-
+-->
     <item
         android:id="@+id/workout_menu_delete"
         android:title="@string/menu_delete" />

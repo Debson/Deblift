@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Deblift</string>
+    <string name="database_name">deblift_db</string>
+
     <string name="title_profile">Profile</string>
     <string name="title_history">History</string>
     <string name="title_workout">Workout</string>
@@ -20,7 +22,7 @@
 
     <string name="set">Set</string>
     <string name="previous">Previous</string>
-    <string name="weight_unit">KG</string>
+    <string name="weight_unit">kg</string>
     <string name="reps">Reps</string>
     <string name="empty_divider">-</string>
     <string name="add_set">Add Set</string>
@@ -29,8 +31,10 @@
     <string name="exercise_name">Exercise Name</string>
     <string name="new_workout_template">New Workout Template</string>
     <string name="start_workout">Start Workout</string>
-    <string name="exercise">Exercise</string>
+    <string name="exerciseName">Exercise</string>
     <string name="muscle_group">Muscle Group</string>
+
+    <string name="last_performed">Last performed:</string>
 
 
 
@@ -43,6 +47,8 @@
     <string name="menu_remove">Remove</string>
 
     <string name="test">18dp</string>
+
+    <string name="exercise_description_delimiter">;</string>
 
 
 </resources>

@@ -7,24 +7,24 @@
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.example.deblift.ui.profile.ProfileFragment"
+        android:name="com.deblift.ui.profile.ProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile" />
 
     <fragment
         android:id="@+id/navigation_history"
-        android:name="com.example.deblift.ui.history.HistoryFragment"
+        android:name="com.deblift.ui.history.HistoryFragment"
         android:label="@string/title_history"
         tools:layout="@layout/fragment_history" />
 
     <fragment
         android:id="@+id/navigation_workouts"
-        android:name="com.example.deblift.ui.workout.WorkoutFragment"
+        android:name="com.deblift.ui.workout.WorkoutFragment"
         android:label="@string/title_workout"
         tools:layout="@layout/fragment_workouts" />
     <fragment
         android:id="@+id/navigation_exercises"
-        android:name="com.example.deblift.ui.exercises.ExerciseFragment"
+        android:name="com.deblift.ui.exercises.ExerciseFragment"
         android:label="@string/title_exercises"
         tools:layout="@layout/fragment_exercises" />
 </navigation>
